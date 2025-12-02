@@ -20,7 +20,7 @@ const team = ref([
   {
     name: "Mahmoud Hussin",
     position: "DevOps Developer",
-    image: "/src/assets/images/team/Mahmoud.JPG"
+    image: "/src/assets/images/team/batman-red-3840x2160-19038.jpg"
   },
   {
     name: "Aliaa Ahmed",
