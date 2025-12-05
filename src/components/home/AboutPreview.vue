@@ -39,7 +39,7 @@ const navigateToAbout = () => {
         </div>
         
         <div class="about-image" data-aos="fade-left">
-          <img src="/src/assets/images/grenco.jpg" alt="Grenco recycling machines" class="image-rounded" />
+          <img src="/src/assets/images/For-Plastic-Solutions.png" alt="Grenco recycling machines" class="image-rounded" />
         </div>
       </div>
     </div>
