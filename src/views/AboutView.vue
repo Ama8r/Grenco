@@ -7,8 +7,7 @@ const { t } = useI18n()
 const company = ref({
   founded: 2020,
   employees: 25,
-  machines: 150,
-  // countries: 10
+  machines: 150
 })
 
 const team = ref([
