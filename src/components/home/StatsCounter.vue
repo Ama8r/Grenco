@@ -26,13 +26,13 @@ const stats = ref([
     icon: "pi-users",
     suffix: "+",
   },
-  {
-    label: t("stats.countries"),
-    value: 0,
-    target: 10,
-    icon: "pi-globe",
-    suffix: "",
-  },
+  // {
+  //   label: t("stats.countries"),
+  //   value: 0,
+  //   target: 10,
+  //   icon: "pi-globe",
+  //   suffix: "",
+  // },
 ]);
 
 const startCounting = () => {
