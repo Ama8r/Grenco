@@ -12,7 +12,7 @@ const company = ref({
 
 const team = ref([
   {
-    name: "Rabeh Yaser",
+    name: "Rabeh Yasser",
     position: "CEO & Founder",
     image: "/src/assets/images/team/Rabeh.jpeg"
   },
