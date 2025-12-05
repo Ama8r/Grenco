@@ -7,12 +7,13 @@ const { t } = useI18n()
 const company = ref({
   founded: 2020,
   employees: 25,
-  machines: 150
+  machines: 150,
+  countries: 10
 })
 
 const team = ref([
   {
-    name: "Rabeh Yasser",
+    name: "Rabeh Yaser",
     position: "CEO & Founder",
     image: "/src/assets/images/team/Rabeh.jpeg"
   },
@@ -93,10 +94,10 @@ const values = ref([
                 <div class="stat-value">{{ company.machines }}+</div>
                 <div class="stat-label">Machines</div>
               </div>
-              <div class="stat-item">
+              <!-- <div class="stat-item">
                 <div class="stat-value">{{ company.countries }}</div>
                 <div class="stat-label">Countries</div>
-              </div>
+              </div> -->
             </div>
           </div>
           
