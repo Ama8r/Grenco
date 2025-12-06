@@ -17,19 +17,11 @@ const team = ref([
     position: "CEO & Founder",
     image: "/src/assets/images/team/Rabeh.jpeg"
   },
-  // {
-  //   name: "Mahmoud Hussin",
-  //   position: "DevOps Developer",
-  //   image: "/src/assets/images/team/mahmoud-hussin.jpg"
-  // },
-  
-import mahmoudImg from '../assets/images/team/mahmoud-hussin.jpg'; 
-
-const teamMember = {
-  name: "Mahmoud Hussin",
-  position: "DevOps Developer",
-  image: mahmoudImg // Use the imported variable here
-};
+  {
+    name: "Mahmoud Hussin",
+    position: "DevOps Developer",
+    image: "/src/assets/images/team/mahmoud-hussin.jpg"
+  },
   {
     name: "Aliaa Ahmed",
     position: "Data Analyst",
