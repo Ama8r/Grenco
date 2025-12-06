@@ -21,43 +21,43 @@ const team = ref([
   {
     name: "Ammar Abd Elbari",
     position: "CTO",
-    image: "https://iili.io/fTmWRlS.md.jpg"
+    image: "https://iili.io/fTmWRlS.md.jpg",
     link: "https://www.linkedin.com/in/ama8r/"
   },
   {
     name: "Mahmoud Hussin",
     position: "DevOps Developer",
-    image: "https://iili.io/fuHwcpp.md.png"
+    image: "https://iili.io/fuHwcpp.md.png",
     link: "https://www.linkedin.com/in/mahmoud-hussein37/"
   },
   {
     name: "Aliaa Ahmed",
     position: "Data Analyst",
-    image: "https://iili.io/fuHjZ1s.md.jpg"
+    image: "https://iili.io/fuHjZ1s.md.jpg",
     link: "https://www.linkedin.com/in/aliaa-ahmed-zaki-918873274/"
   },
   {
     name: "Yasmen Essam",
     position: "HR Manager",
-    image: "https://iili.io/fuHwEQt.md.jpg"
+    image: "https://iili.io/fuHwEQt.md.jpg",
     link: "https://www.linkedin.com/in/yasmeen-essam-212308323/"
   },
   {
     name: "Salma Mostafa",
     position: "CAD Engineer",
-    image: "https://iili.io/fuHwIQ1.md.jpg"
+    image: "https://iili.io/fuHwIQ1.md.jpg",
     link: "https://www.linkedin.com/in/salma-mostafa2001/"
   },
   {
     name: "Magda Atef",
     position: "Public Relations",
-    image: "https://iili.io/fuHjm74.md.jpg"
+    image: "https://iili.io/fuHjm74.md.jpg",
     link : "https://www.linkedin.com/in/magda-atef-277158249/"
   },
   {
     name: "Ahmed Farrag",
     position: "Application Developer",
-    image: "https://iili.io/fuHjQBn.md.jpg"
+    image: "https://iili.io/fuHjQBn.md.jpg",
     link : "https://www.linkedin.com/in/ahmedfarragtantawy/"
   }
   
