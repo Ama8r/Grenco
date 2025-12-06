@@ -22,36 +22,43 @@ const team = ref([
     name: "Ammar Abd Elbari",
     position: "CTO",
     image: "https://iili.io/fTmWRlS.md.jpg"
+    link: "https://www.linkedin.com/in/ama8r/"
   },
   {
     name: "Mahmoud Hussin",
     position: "DevOps Developer",
     image: "https://iili.io/fuHwcpp.md.png"
+    link: "https://www.linkedin.com/in/mahmoud-hussein37/"
   },
   {
     name: "Aliaa Ahmed",
     position: "Data Analyst",
     image: "https://iili.io/fuHjZ1s.md.jpg"
+    link: "https://www.linkedin.com/in/aliaa-ahmed-zaki-918873274/"
   },
   {
     name: "Yasmen Essam",
     position: "HR Manager",
     image: "https://iili.io/fuHwEQt.md.jpg"
+    link: "https://www.linkedin.com/in/yasmeen-essam-212308323/"
   },
   {
     name: "Salma Mostafa",
     position: "CAD Engineer",
     image: "https://iili.io/fuHwIQ1.md.jpg"
+    link: "https://www.linkedin.com/in/salma-mostafa2001/"
   },
   {
     name: "Magda Atef",
     position: "Public Relations",
     image: "https://iili.io/fuHjm74.md.jpg"
+    link : "https://www.linkedin.com/in/magda-atef-277158249/"
   },
   {
     name: "Ahmed Farrag",
     position: "Application Developer",
     image: "https://iili.io/fuHjQBn.md.jpg"
+    link : "https://www.linkedin.com/in/ahmedfarragtantawy/"
   }
   
 ].filter(member => member && member.name && member.position && member.image))
@@ -111,10 +118,6 @@ const values = ref([
                 <div class="stat-value">{{ company.machines }}+</div>
                 <div class="stat-label">Machines</div>
               </div>
-              <!-- <div class="stat-item">
-                <div class="stat-value">{{ company.countries }}</div>
-                <div class="stat-label">Countries</div>
-              </div> -->
             </div>
           </div>
           
@@ -152,9 +155,11 @@ const values = ref([
         <h2 class="section-title" data-aos="fade-up">Our Team</h2>
         
         <div class="team-grid">
-          <div 
+          <a 
             v-for="(member, index) in team" 
             :key="index"
+            :href="member.link" 
+            target="_blank"
             class="team-card"
             data-aos="fade-up"
             :data-aos-delay="index * 100"
@@ -166,7 +171,7 @@ const values = ref([
               <h3 class="team-name">{{ member.name }}</h3>
               <p class="team-position">{{ member.position }}</p>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </section>
@@ -340,12 +345,17 @@ const values = ref([
   gap: var(--space-4);
 }
 
+
 .team-card {
   background-color: var(--color-white);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   transition: transform var(--transition-normal) ease;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .team-card:hover {

@@ -90,7 +90,7 @@ onMounted(() => {
   padding: var(--space-6) 0;
   background-color: var(--color-primary);
   color: var(--color-white);
-  position: relative;
+  position: center;
   overflow: hidden;
 }
 
@@ -111,7 +111,7 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-4);
-  position: relative;
+  position: center;
 }
 
 .stat-item {
