@@ -17,17 +17,11 @@ const team = ref([
     position: "CEO & Founder",
     image: "/src/assets/images/team/Rabeh.jpeg"
   },
-  // {
-  //   name: "Mahmoud Hussin",
-  //   position: "DevOps Developer",
-  //   image: "/src/assets/images/team/Mahmoud Hussin.jpg"
-  // },
   {
-  name: "Mahmoud Hussin",
-  position: "DevOps Developer",
-  // Note the '%20' instead of a space, and removal of '/src'
-  image: "/images/team/Mahmoud%20Hussin.jpg" 
-}
+    name: "Mahmoud Hussin",
+    position: "DevOps Developer",
+    image: "/src/assets/images/team/Mahmoud Hussin.jpg"
+  },
   {
     name: "Aliaa Ahmed",
     position: "Data Analyst",
