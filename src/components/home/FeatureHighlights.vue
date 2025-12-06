@@ -6,7 +6,7 @@ const features = ref([
     icon: "pi-bolt",
     title: "Energy Efficient",
     description:
-      "## The machine is designed to optimize electricity consumption, minimizing operating costs while maintaining stable performance.",
+      "The machine is designed to optimize electricity consumption, minimizing operating costs while maintaining stable performance.",
     color: "#00c853",
   },
   {
@@ -23,7 +23,7 @@ const features = ref([
   },
   {
     icon: "pi-chart-line",
-    title: "Machine Performance Analytics**",
+    title: "Machine Performance Analytics",
     description: "Real-time tracking of productivity, operational efficiency, and waste ratios through an intelligent dashboard to enhance manufacturing quality and make precise decisions.",
     color: "#ff6d00",
   },
