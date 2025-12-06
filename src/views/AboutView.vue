@@ -15,7 +15,7 @@ const team = ref([
   {
     name: "Rabeh Yaser",
     position: "CEO & Founder",
-    image: "https://iili.io/fTZxxLB.md.png"
+    image: "https://iili.io/fuHwCkQ.md.jpg"
   },
   {
     name: "Ammar Abd Elbari",
@@ -26,22 +26,22 @@ const team = ref([
   {
     name: "Mahmoud Hussin",
     position: "DevOps Developer",
-    image: "https://iili.io/fTQrFqJ.md.png"
+    image: "https://iili.io/fuHwcpp.md.png"
   },
   {
     name: "Aliaa Ahmed",
     position: "Data Analyst",
-    image: "https://iili.io/fTZxnzQ.md.jpg"
+    image: "https://iili.io/fuHjZ1s.md.jpg"
   },
   {
     name: "Yasmen Essam",
     position: "HR Manager",
-    image: "https://iili.io/fTZgoBa.md.png"
+    image: "https://iili.io/fuHwEQt.md.jpg"
   },
   {
     name: "Ahmed Farrag",
     position: "Application Developer",
-    image: "https://iili.io/fTZP9wB.md.png"
+    image: "https://iili.io/fuHjQBn.md.jpg"
   }
 ].filter(member => member && member.name && member.position && member.image))
 
