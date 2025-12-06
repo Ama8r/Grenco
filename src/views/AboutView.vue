@@ -16,13 +16,12 @@ const team = ref([
     name: "Rabeh Yaser",
     position: "CEO & Founder",
     image: "https://iili.io/fTZxxLB.md.png"
-    //link: "https://www.linkedin.com/in/rabeh-yaser"
   },
   {
     name: "Ammar Abd Elbari",
     position: "CTO",
     image: "https://iili.io/fTZiZkx.md.jpg",
-    link: "https://www.linkedin.com/in/rabeh-yaser"
+    
   },
   {
     name: "Mahmoud Hussin",
