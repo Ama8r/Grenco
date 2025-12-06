@@ -15,7 +15,7 @@ const team = ref([
   {
     name: "Rabeh Yaser",
     position: "CEO & Founder",
-    image: "/src/assets/images/team/Rabeh.jpeg"
+    image: "https://iili.io/fTLGTAB.md.jpg"
   },
   {
     name: "Mahmoud Hussin",
@@ -25,12 +25,12 @@ const team = ref([
   {
     name: "Aliaa Ahmed",
     position: "Data Analyst",
-    image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg"
+    image: "https://iili.io/fTLlq22.md.jpg"
   },
   {
     name: "Yasmen Essam",
     position: "HR Manager",
-    image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg"
+    image: "https://iili.io/fTL1XeI.md.jpg"
   },
   // {
   //   name: "Ahmed Farrag",
