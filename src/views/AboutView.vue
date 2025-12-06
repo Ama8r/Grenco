@@ -21,7 +21,8 @@ const team = ref([
   {
     name: "Ammar Abd Elbari",
     position: "CTO",
-    image: "https://iili.io/fTZiZkx.md.jpg"
+    image: "https://iili.io/fTZiZkx.md.jpg",
+    link: "https://www.linkedin.com/in/rabeh-yaser"
   },
   {
     name: "Mahmoud Hussin",
