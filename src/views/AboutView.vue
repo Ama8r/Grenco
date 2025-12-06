@@ -5,8 +5,8 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const company = ref({
-  founded: 2020,
-  employees: 25,
+  founded: 2024,
+  employees: 15,
   machines: 150
   //countries: 10
 })
