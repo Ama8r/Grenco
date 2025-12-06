@@ -30,7 +30,7 @@ const team = ref([
   {
     name: "Aliaa Ahmed",
     position: "Data Analyst",
-    image: "https://iili.io/fTLlq22.md.jpg"
+    image: "https://iili.io/fTZxnzQ.md.jpg"
   },
   {
     name: "Yasmen Essam",
