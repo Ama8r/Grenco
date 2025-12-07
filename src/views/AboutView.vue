@@ -23,7 +23,6 @@ const team = ref([
     position: "CTO",
     image: "https://iili.io/fTmWRlS.md.jpg",
     link: "https://www.linkedin.com/in/ama8r/"
-    //commit
   },
   {
     name: "Mahmoud Hussin",
