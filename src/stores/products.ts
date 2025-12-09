@@ -19,9 +19,9 @@ export const useProductsStore = defineStore('products', () => {
   const products = ref<Product[]>([
     {
       id: 1,
-      name: 'EcoGrind S100',
-      description: 'Compact plastic grinding machine optimized for small workshops',
-      fullDescription: 'The EcoGrind S100 is our entry-level smart recycling machine, perfect for small workshops and businesses just starting their recycling journey. This compact unit offers excellent performance while requiring minimal space and investment.',
+      name: 'Screws & Barrels',
+      description: 'Durable, customized screws and barrels designed to enhance efficiency and stability in injection molding, extrusion, and recycling.',
+      fullDescription: 'Grenco delivers high-quality screws and barrels engineered for superior performance in injection molding, extrusion, and recycling applications.Each unit is manufactured from premium alloy steel and undergoes advanced heat-treatment processes to ensure maximum strength and stability during continuous operation.With full customization available for all dimensions and specifications, the company provides tailored solutions that enhance production efficiency and deliver long-term reliability across industrial environments.',
       specs: {
         capacity: '50 kg/hour',
         power: '3.5 kW',
@@ -31,24 +31,23 @@ export const useProductsStore = defineStore('products', () => {
       },
       plasticTypes: ['PET', 'HDPE', 'LDPE'],
       features: [
-        'Smart energy management',
-        'Remote monitoring via mobile app',
-        'Customizable grinding settings',
-        'Automatic shutdown when idle',
-        'Small footprint design'
+        'Precision-crafted design',
+        'High-strength steel',
+        'Advanced heat-treatment',
+        'Fully customized manufacturing',
       ],
       image: 'assets/images/products/machine1.jpeg',
       gallery: [
-        'assets/images/products/machine1.jpeg',
-        'https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg',
-        'assets/images/products/machine2.jpeg'
+        'https://iili.io/fRnRayb.md.png',
+        'https://iili.io/fRnDZas.md.png',
+        'https://iili.io/fRxzSxp.md.jpg'
       ]
     },
     {
       id: 2,
-      name: 'RecycleMaster R200',
-      description: 'Medium capacity recycling solution for diverse plastic types',
-      fullDescription: 'The RecycleMaster R200 is our mid-range recycling machine, designed for medium-sized operations that need versatility and higher capacity. With advanced features and solid construction, it delivers reliable performance across a wide range of plastic materials.',
+      name: 'Plastic Shredder Machines',
+      description: 'Robust and safe plastic shredders delivering stable performance and cost-effective solutions for recycling plants.',
+      fullDescription: 'Grenco provides high-reliability plastic shredding machines engineered for strong and consistent performance in recycling facilities and industrial workshops.With customizable sizes and capacities, the machines efficiently process various plastic materials while maintaining a stable and uniform shredded output.The reinforced construction ensures smooth operation under heavy workloads, while the intelligent safety system reduces downtime and enhances operator protection.Thanks to its maintenance-friendly design, the shredder offers a durable and cost-effective solution tailored for modern recycling operations.',
       specs: {
         capacity: '120 kg/hour',
         power: '7.5 kW',
@@ -58,25 +57,26 @@ export const useProductsStore = defineStore('products', () => {
       },
       plasticTypes: ['PET', 'HDPE', 'LDPE', 'PP', 'PS'],
       features: [
-        'Advanced sorting system',
-        'Real-time analytics dashboard',
-        'Energy-efficient operation',
-        'Automatic material detection',
-        'One-touch operation',
-        'Predictive maintenance alerts'
+        'Efficient plastic shredding',
+        'Multiple customizable sizes',
+        'Reinforced steel structure',
+        'Smart overload protection',
+        'Low energy consumption',
+        'Quick maintenance access'
       ],
       image: 'assets/images/products/machine2.jpeg',
       gallery: [
-        'assets/images/products/machine2.jpeg',
-        'assets/images/products/machine1.jpeg',
-        'assets/images/products/machine3.jpeg'
+        'https://iili.io/fRois0G.md.png',
+        'https://iili.io/fRTZXjf.md.jpg',
+        'https://iili.io/fRTm4HP.md.jpg',
+        
       ]
     },
     {
       id: 3,
-      name: 'InduStrong I500',
-      description: 'Heavy-duty industrial recycling system for high-volume operations',
-      fullDescription: 'The InduStrong I500 is our flagship industrial recycling system, engineered for factories and large recycling operations. This heavy-duty machine offers maximum throughput, exceptional reliability, and comprehensive automation features to minimize labor costs and maximize productivity.',
+      name: 'Mini Plastic Recycling Machines',
+      description: 'Compact, smart recycling machines supporting multiple processes with intelligent monitoring for continuous operation',
+      fullDescription: 'Grenco offers compact and flexible mini plastic recycling machines designed to support multiple recycling processes within a smart and efficient framework.The system enables operations such as shredding, thermal processing, and material preparation without requiring large production spaces or complex setups.Equipped with an IIoT-enabled monitoring platform, the machine provides real-time insights, productivity analytics, and maintenance alerts to ensure continuous and stable operation.This makes it an excellent solution for small facilities, R&D laboratories, and startups seeking an affordable and technologically advanced recycling system.',
       specs: {
         capacity: '500 kg/hour',
         power: '22 kW',
@@ -86,19 +86,16 @@ export const useProductsStore = defineStore('products', () => {
       },
       plasticTypes: ['All major plastic types'],
       features: [
-        'Maximum throughput design',
-        'AI-powered sorting technology',
-        'Full automation options',
-        'Industrial-grade construction',
-        'Advanced safety systems',
-        'Cloud-based monitoring and control',
-        'Integration with factory systems'
+        "Compact versatile design",
+      "Perfect for workshops",
+      "Smart IIoT control",
+      "User-friendly interface",
+      "Energy-efficient performance"
       ],
       image: 'assets/images/products/machine3.jpeg',
       gallery: [
-        'assets/images/products/machine3.jpeg',
-        'assets/images/products/machine2.jpeg',
-        'assets/images/products/machine1.jpeg'
+        'https://iili.io/fRoIWAv.md.png',
+        'https://iili.io/fRI3Sa4.md.png',
       ]
     }
   ])

@@ -8,42 +8,60 @@ const router = useRouter();
 
 // Sample products data  
 const products = ref([
+  // {
+  //   id: 1,
+  //   name: "EcoGrind S100",
+  //   image: "assets/images/products/machine1.jpeg",
+  //   description:
+  //     "Compact plastic grinding machine optimized for small workshops",
+  //   plasticTypes: ["PET", "HDPE", "LDPE"],
+  //   features: [
+  //     "Smart energy management",
+  //     "Remote monitoring",
+  //     "Customizable grinding settings",
+  //   ],
+  // }
   {
     id: 1,
-    name: "EcoGrind S100",
-    image: "assets/images/products/machine1.jpeg",
+    name: "Screws & Barrels",
+    image: "https://iili.io/fRnRayb.md.png",
     description:
-      "Compact plastic grinding machine optimized for small workshops",
-    plasticTypes: ["PET", "HDPE", "LDPE"],
+      "Grenco’s Screws & Barrels are engineered to deliver exceptional performance in injection molding, extrusion, and recycling applications.  ",
+    //plasticTypes: ["PET", "HDPE", "LDPE"],
     features: [
-      "Smart energy management",
-      "Remote monitoring",
-      "Customizable grinding settings",
-    ],
+      "Precision-crafted design",
+      "High-strength steel",
+      "Advanced heat-treatment",
+      "Fully customized manufacturing",    ],  
   },
   {
     id: 2,
-    name: "RecycleMaster R200",
-    image: "assets/images/products/machine2.jpeg",
+    name: "Plastic Shredder Machines",
+    image: "https://iili.io/fRois0G.md.png",
     description: "Medium capacity recycling solution for diverse plastic types",
     plasticTypes: ["PET", "HDPE", "LDPE", "PP", "PS"],
     features: [
-      "Advanced sorting system",
-      "Real-time analytics",
-      "Energy-efficient operation",
+        'Efficient plastic shredding',
+        'Multiple customizable sizes',
+        'Reinforced steel structure',
+        'Smart overload protection',
+        'Low energy consumption',
+        'Quick maintenance access'
     ],
   },
   {
     id: 3,
-    name: "InduStrong I500",
-    image: "assets/images/products/machine3.jpeg",
+    name: "Mini Plastic Recycling Machines",
+    image: "https://iili.io/fRoIWAv.md.png",
     description:
-      "Heavy-duty industrial recycling system for high-volume operations",
+      "Compact, smart recycling machines supporting multiple processes with intelligent monitoring for continuous operation",
     plasticTypes: ["All major plastic types"],
     features: [
-      "Maximum throughput",
-      "AI-powered sorting",
-      "Full automation options",
+      "Compact versatile design",
+      "Perfect for workshops",
+      "Smart IIoT control",
+      "User-friendly interface",
+      "Energy-efficient performance",
     ],
   },
 ]);

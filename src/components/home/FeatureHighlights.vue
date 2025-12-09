@@ -6,37 +6,37 @@ const features = ref([
     icon: "pi-bolt",
     title: "Energy Efficient",
     description:
-      "The machine is designed to optimize electricity consumption, minimizing operating costs while maintaining stable performance.",
+      "The machine optimizes power use without affecting performance, reducing operating costs while staying efficient.",
     color: "#00c853",
   },
   {
     icon: "pi-cog",
     title: "Customizable Manufacturing",
-    description: "The machine allows customization of manufacturing processes to suit different types of plastics used by each workshop or factory.",
+    description: "We customize the machine’s manufacturing process to suit the plastic types used by each workshop or factory.",
     color: "#1e88e5",
   },
   {
     icon: "pi-mobile",
     title: "Smart Controls",
-    description: "Full remote monitoring and operation of the machine via the Grenco app, with instant alerts on machine performance and operational status.",
+    description: "The machine can be fully monitored and controlled remotely through the Grenco app with instant alerts.",
     color: "#7b1fa2",
   },
   {
     icon: "pi-chart-line",
     title: "Machine Performance Analytics",
-    description: "Real-time tracking of productivity, operational efficiency, and waste ratios through an intelligent dashboard to enhance manufacturing quality and make precise decisions.",
+    description: "A smart dashboard shows real-time productivity, efficiency, and waste data to improve quality and decisions.",
     color: "#ff6d00",
   },
   {
     icon: "pi-filter",
     title: "Multi-material Equipment",
-    description: "We manufacture customized equipment designed to process various plastics such as PET, PP, HDPE, and others, tailored to the specific properties of each material for optimal results.",
+    description: "We design equipment capable of processing plastics like PET, PP, and HDPE with tuning for each material.",
     color: "#2962ff",
   },
   {
     icon: "pi-check-circle",
     title: "Quality Assurance",
-    description: "An intelligent monitoring system enables continuous remote tracking of the final product quality to ensure consistent performance and reduce operational errors.",
+    description: "An intelligent system remotely monitors final product quality to ensure stability and reduce operational errors.",
     color: "#00bcd4",
   },
 ]);
