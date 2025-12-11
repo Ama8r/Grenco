@@ -1,90 +1,154 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import { useProductsStore } from '../stores/products'
-import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
-const productsStore = useProductsStore()
+const route = useRoute()
 const router = useRouter()
+const productsStore = useProductsStore()
 
-const filteredProducts = computed(() => {
-  return productsStore.products
+const product = computed(() => {
+  const id = Number(route.params.id)
+  return productsStore.getProductById(id)
 })
 
-const viewProduct = (id: number) => {
-  router.push({ name: 'product-details', params: { id } })
+const activeMedia = ref('') // قمت بتغيير الاسم من activeImage ليكون أدق
+
+onMounted(() => {
+  if (product.value && product.value.gallery) {
+    activeMedia.value = product.value.gallery[0]
+  }
+})
+
+const setActiveMedia = (media: string) => {
+  activeMedia.value = media
 }
 
-const requestQuote = (id: number) => {
-  router.push({ 
-    name: 'contact',
-    query: { 
-      subject: `Quote request for product #${id}` 
-    } 
-  })
+// دالة مساعدة للتحقق مما إذا كان الملف فيديو
+const isVideo = (url: string) => {
+  if (!url) return false;
+  const videoExtensions = ['.mp4', '.webm', '.ogg'];
+  return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
+}
+
+const requestQuote = () => {
+  if (product.value) {
+    router.push({ 
+      name: 'contact',
+      query: { 
+        subject: `Quote request for ${product.value.name}` 
+      } 
+    })
+  }
+}
+
+// If product not found, redirect to products page
+if (!product.value) {
+  router.push({ name: 'products' })
 }
 </script>
 
 <template>
-  <div class="products-page">
+  <div v-if="product" class="product-details-page">
     <div class="page-header">
       <div class="container">
-        <h1 class="page-title" data-aos="fade-up">{{ t('products.title') }}</h1>
-        <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">{{ t('products.subtitle') }}</p>
+        <h1 class="page-title" data-aos="fade-up">{{ product.name }}</h1>
       </div>
     </div>
     
-    <section class="section products-section">
+    <section class="section product-details-section">
       <div class="container">
-        <div class="products-grid">
-          <div 
-            v-for="product in filteredProducts" 
-            :key="product.id"
-            class="product-card"
-            data-aos="fade-up"
-            :data-aos-delay="product.id * 100"
-          >
-            <div class="product-image">
-              <img :src="product.image" :alt="product.name" />
-            </div>
-            <div class="product-content">
-              <h3 class="product-title">{{ product.name }}</h3>
-              <p class="product-description">{{ product.description }}</p>
+        <div class="product-details-grid">
+          <div class="product-gallery" data-aos="fade-right">
+            
+            <div class="main-image">
+              <video 
+                v-if="isVideo(activeMedia)" 
+                :src="activeMedia" 
+                controls 
+                autoplay 
+                muted 
+                class="media-content"
+              ></video>
               
-              <div class="product-plastics">
-                <h4>{{ t('products.plasticTypes') }}</h4>
-                <div class="plastic-tags">
-                  <span 
-                    v-for="(type, index) in product.plasticTypes" 
-                    :key="index"
-                    class="plastic-tag"
-                  >
-                    {{ type }}
-                  </span>
+              <img 
+                v-else 
+                :src="activeMedia || product.image" 
+                :alt="product.name" 
+                class="media-content" 
+              />
+            </div>
+            
+            <div v-if="product.gallery" class="gallery-thumbs">
+              <div 
+                v-for="(media, index) in product.gallery" 
+                :key="index"
+                class="thumb"
+                :class="{ active: activeMedia === media }"
+                @click="setActiveMedia(media)"
+              >
+                <div v-if="isVideo(media)" class="video-thumb-wrapper">
+                   <video :src="media" muted></video>
+                   <div class="play-icon-overlay">
+                     <i class="pi pi-play-circle"></i>
+                   </div>
+                </div>
+
+                <img v-else :src="media" :alt="`${product.name} - Image ${index + 1}`" />
+              </div>
+            </div>
+          </div>
+          
+          <div class="product-info" data-aos="fade-left">
+            <p class="product-description">{{ product.fullDescription || product.description }}</p>
+            
+            <div class="product-features-full">
+              <h3>{{ t('products.featureTitle') }}</h3>
+              <ul>
+                <li v-for="(feature, index) in product.features" :key="index">
+                  <i class="pi pi-check"></i> {{ feature }}
+                </li>
+              </ul>
+            </div>
+            
+            <div class="product-specs">
+              <h3>{{ t('products.specs') }}</h3>
+              <div class="specs-grid">
+                <div v-for="(value, key) in product.specs" :key="key" class="spec-item">
+                  <div class="spec-label">{{ key }}</div>
+                  <div class="spec-value">{{ value }}</div>
                 </div>
               </div>
-              
-              <div class="product-features">
-                <h4>{{ t('products.featureTitle') }}</h4>
-                <ul>
-                  <li v-for="(feature, index) in product.features.slice(0, 3)" :key="index">
-                    <i class="pi pi-check"></i> {{ feature }}
-                  </li>
-                </ul>
-                <span v-if="product.features.length > 3" class="more-features">
-                  +{{ product.features.length - 3 }} more features
+            </div>
+            
+            <div class="product-plastics-full">
+              <h3>{{ t('products.plasticTypes') }}</h3>
+              <div class="plastic-tags">
+                <span 
+                  v-for="(type, index) in product.plasticTypes" 
+                  :key="index"
+                  class="plastic-tag"
+                >
+                  {{ type }}
                 </span>
               </div>
-              
-              <div class="product-actions">
-                <button @click="viewProduct(product.id)" class="btn btn-primary">
-                  {{ t('products.learnMore') }}
-                </button>
-                <button @click="requestQuote(product.id)" class="btn btn-outline">
-                  {{ t('products.requestQuote') }}
-                </button>
-              </div>
+            </div>
+            
+            <div class="product-customization">
+              <h3>{{ t('products.customization') }}</h3>
+              <p>Our machines can be customized to fit your specific requirements. Contact us for details on customization options including size adjustments, specialized components, and integration with existing systems.</p>
+            </div>
+            
+            <div class="product-actions">
+              <button @click="requestQuote" class="btn btn-primary">
+                {{ t('products.requestQuote') }}
+              </button>
+              <router-link :to="{ name: 'products' }" class="btn btn-outline">
+                <i class="pi pi-arrow-left"></i>
+                {{ t('products.title') }}
+              </router-link>
             </div>
           </div>
         </div>
@@ -94,6 +158,7 @@ const requestQuote = (id: number) => {
 </template>
 
 <style scoped>
+/* نفس الستايلات القديمة مع بعض التعديلات لدعم الفيديو */
 .page-header {
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -122,130 +187,218 @@ const requestQuote = (id: number) => {
   margin-bottom: var(--space-2);
 }
 
-.page-subtitle {
-  position: relative;
-  font-size: var(--font-size-lg);
-  max-width: 600px;
-  margin: 0 auto;
-  opacity: 0.9;
-}
-
-.products-section {
+.product-details-section {
   padding: var(--space-6) 0;
   background-color: var(--color-white);
 }
 
-.products-grid {
+.product-details-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-5);
 }
 
-.product-card {
-  background-color: var(--color-white);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+.product-gallery {
   display: flex;
   flex-direction: column;
+  gap: var(--space-3);
 }
 
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
-}
-
-.product-image {
-  height: 250px;
+.main-image {
+  width: 100%;
+  height: 400px;
   overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background-color: #000; /* خلفية سوداء للفيديو */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.product-image img {
+/* تنسيق موحد للصورة والفيديو في العرض الرئيسي */
+.media-content {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-slow) ease;
 }
 
-.product-card:hover .product-image img {
+/* الفيديو لا يحتاج لتكبير عند التمرير لأنه يحتوي على أدوات تحكم */
+img.media-content:hover {
   transform: scale(1.05);
 }
 
-.product-content {
-  padding: var(--space-4);
-  flex: 1;
+.gallery-thumbs {
   display: flex;
-  flex-direction: column;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
-.product-title {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--space-2);
-  color: var(--color-secondary);
+.thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+  position: relative; /* مهم لأيقونة الفيديو */
+  background-color: #f0f0f0;
 }
 
+.thumb img, 
+.thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ستايلات خاصة بمصغر الفيديو */
+.video-thumb-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.play-icon-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-icon-overlay i {
+  color: white;
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.thumb:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.thumb.active {
+  box-shadow: 0 0 0 3px var(--color-primary);
+}
+
+/* --- باقي الستايلات القديمة كما هي --- */
 .product-description {
-  color: var(--color-gray-600);
-  margin-bottom: var(--space-3);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-4);
+  color: var(--color-gray-700);
+  line-height: 1.7;
 }
 
-.product-plastics,
-.product-features {
-  margin-bottom: var(--space-3);
+.product-features-full,
+.product-specs,
+.product-plastics-full,
+.product-customization {
+  margin-bottom: var(--space-5);
 }
 
-.product-plastics h4,
-.product-features h4 {
-  font-size: var(--font-size-base);
+.product-features-full h3,
+.product-specs h3,
+.product-plastics-full h3,
+.product-customization h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-3);
+  color: var(--color-secondary);
+  position: relative;
+  padding-bottom: var(--space-2);
+}
+
+.product-features-full h3::after,
+.product-specs h3::after,
+.product-plastics-full h3::after,
+.product-customization h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: var(--color-primary);
+}
+
+.product-features-full ul {
+  list-style: none;
+  padding: 0;
+}
+
+.product-features-full li {
+  display: flex;
+  align-items: flex-start;
   margin-bottom: var(--space-2);
+  color: var(--color-gray-700);
+}
+
+.product-features-full li i {
+  color: var(--color-primary);
+  margin-right: var(--space-2);
+  margin-top: 0.25rem;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+
+.spec-item {
+  background-color: var(--color-gray-100);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  transition: transform var(--transition-normal) ease;
+}
+
+.spec-item:hover {
+  transform: translateY(-3px);
+  background-color: var(--color-primary-light);
+}
+
+.spec-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin-bottom: var(--space-1);
+  text-transform: capitalize;
+}
+
+.spec-value {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
   color: var(--color-secondary);
 }
 
 .plastic-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .plastic-tag {
-  background-color: var(--color-gray-100);
-  color: var(--color-secondary);
-  padding: 0.25rem 0.75rem;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  padding: 0.5rem 1rem;
   border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
 }
 
-.product-features ul {
-  list-style: none;
-  padding: 0;
-}
-
-.product-features li {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: var(--space-1);
+.product-customization p {
   color: var(--color-gray-700);
-}
-
-.product-features li i {
-  color: var(--color-primary);
-  margin-right: var(--space-2);
-  margin-top: 0.25rem;
-}
-
-.more-features {
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-500);
-  font-style: italic;
+  line-height: 1.6;
 }
 
 .product-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-3);
+  gap: var(--space-3);
+  margin-top: var(--space-5);
 }
 
 @media (min-width: 640px) {
@@ -254,20 +407,22 @@ const requestQuote = (id: number) => {
   }
 }
 
-@media (min-width: 768px) {
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (min-width: 1024px) {
-  .products-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .product-details-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-:deep(.rtl) .product-features li i {
+:deep(.rtl) .product-features-full li i {
   margin-right: 0;
   margin-left: var(--space-2);
+}
+
+:deep(.rtl) .product-features-full h3::after,
+:deep(.rtl) .product-specs h3::after,
+:deep(.rtl) .product-plastics-full h3::after,
+:deep(.rtl) .product-customization h3::after {
+  left: auto;
+  right: 0;
 }
 </style>

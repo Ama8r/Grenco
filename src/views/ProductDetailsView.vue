@@ -14,16 +14,24 @@ const product = computed(() => {
   return productsStore.getProductById(id)
 })
 
-const activeImage = ref('')
+// قمنا بتغيير الاسم ليكون أكثر دقة
+const activeMedia = ref('')
 
 onMounted(() => {
   if (product.value && product.value.gallery) {
-    activeImage.value = product.value.gallery[0]
+    activeMedia.value = product.value.gallery[0]
   }
 })
 
-const setActiveImage = (image: string) => {
-  activeImage.value = image
+const setActiveMedia = (media: string) => {
+  activeMedia.value = media
+}
+
+// دالة للتحقق مما إذا كان الملف فيديو
+const isVideo = (url: string) => {
+  if (!url) return false
+  const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov']
+  return videoExtensions.some(ext => url.toLowerCase().endsWith(ext))
 }
 
 const requestQuote = () => {
@@ -54,20 +62,45 @@ if (!product.value) {
     <section class="section product-details-section">
       <div class="container">
         <div class="product-details-grid">
+          
           <div class="product-gallery" data-aos="fade-right">
+            
             <div class="main-image">
-              <img :src="activeImage || product.image" :alt="product.name" />
+              <video 
+                v-if="isVideo(activeMedia)" 
+                :key="activeMedia"
+                controls 
+                autoplay 
+                class="media-content"
+              >
+                <source :src="activeMedia" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              
+              <img 
+                v-else 
+                :src="activeMedia || product.image" 
+                :alt="product.name" 
+                class="media-content"
+              />
             </div>
             
             <div v-if="product.gallery" class="gallery-thumbs">
               <div 
-                v-for="(image, index) in product.gallery" 
+                v-for="(media, index) in product.gallery" 
                 :key="index"
                 class="thumb"
-                :class="{ active: activeImage === image }"
-                @click="setActiveImage(image)"
+                :class="{ active: activeMedia === media }"
+                @click="setActiveMedia(media)"
               >
-                <img :src="image" :alt="`${product.name} - Image ${index + 1}`" />
+                <div v-if="isVideo(media)" class="video-thumb-wrapper">
+                   <video :src="media" muted></video>
+                   <div class="play-icon-overlay">
+                     <i class="pi pi-play-circle"></i>
+                   </div>
+                </div>
+
+                <img v-else :src="media" :alt="`${product.name} - Image ${index + 1}`" />
               </div>
             </div>
           </div>
@@ -174,22 +207,28 @@ if (!product.value) {
   gap: var(--space-3);
 }
 
+/* تحديثات العرض الرئيسي */
 .main-image {
   width: 100%;
   height: 400px;
   overflow: hidden;
   border-radius: var(--radius-lg);
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background-color: #000; /* خلفية سوداء للفيديو */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.main-image img {
+.media-content {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /*object-fit: cover;*/
   transition: transform var(--transition-slow) ease;
 }
 
-.main-image:hover img {
+/* تطبيق التكبير فقط على الصور وليس الفيديو */
+img.media-content:hover {
   transform: scale(1.05);
 }
 
@@ -206,12 +245,40 @@ if (!product.value) {
   overflow: hidden;
   cursor: pointer;
   transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+  position: relative;
+  background-color: #f0f0f0;
 }
 
-.thumb img {
+.thumb img, 
+.thumb video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* تنسيقات مصغر الفيديو */
+.video-thumb-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.play-icon-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-icon-overlay i {
+  color: white;
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
 
 .thumb:hover {

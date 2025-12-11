@@ -87,15 +87,17 @@ export const useProductsStore = defineStore('products', () => {
       plasticTypes: ['All major plastic types'],
       features: [
         "Compact versatile design",
-      "Perfect for workshops",
-      "Smart IIoT control",
-      "User-friendly interface",
-      "Energy-efficient performance"
+        "Perfect for workshops",
+        "Smart IIoT control",
+        "User-friendly interface",
+        "Energy-efficient performance"
       ],
       image: 'assets/images/products/machine3.jpeg',
       gallery: [
         'https://iili.io/fRoIWAv.md.png',
         'https://iili.io/fRI3Sa4.md.png',
+        // التعديل هنا: إضافة (/) لضمان القراءة من مجلد public بشكل صحيح
+        '/videos/video_1.mp4'
       ]
     }
   ])
