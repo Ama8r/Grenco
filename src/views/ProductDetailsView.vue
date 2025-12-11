@@ -214,7 +214,8 @@ if (!product.value) {
   overflow: hidden;
   border-radius: var(--radius-lg);
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  background-color: #000; /* خلفية سوداء للفيديو */
+  /*background-color: #000; */ /* خلفية سوداء للفيديو */
+  background: linear-gradient(135deg, #004d20 0%, #00c853 100%);
   display: flex;
   align-items: center;
   justify-content: center;
