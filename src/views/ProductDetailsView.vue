@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+//import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductsStore } from '../stores/products'
@@ -9,13 +10,38 @@ const route = useRoute()
 const router = useRouter()
 const productsStore = useProductsStore()
 
+// const product = computed(() => {
+//   const id = Number(route.params.id)
+//   return productsStore.getProductById(id)
+// })
+
+// قمنا بتغيير الاسم ليكون أكثر دقة
+
 const product = computed(() => {
   const id = Number(route.params.id)
+
+  if (isNaN(id)) return undefined
   return productsStore.getProductById(id)
 })
 
-// قمنا بتغيير الاسم ليكون أكثر دقة
+
 const activeMedia = ref('')
+
+
+watch(product, (newVal) => {
+
+  if (newVal && newVal.gallery && newVal.gallery.length > 0) {
+    activeMedia.value = newVal.gallery[0]
+  } 
+
+  else if (newVal === undefined && !isNaN(Number(route.params.id))) {
+
+    setTimeout(() => {
+       router.push({ name: 'products' })
+    }, 100)
+  }
+}, { immediate: true })
+
 
 onMounted(() => {
   if (product.value && product.value.gallery) {
@@ -46,9 +72,9 @@ const requestQuote = () => {
 }
 
 // If product not found, redirect to products page
-if (!product.value) {
-  router.push({ name: 'products' })
-}
+// if (!product.value) {
+//   router.push({ name: 'products' })
+// }
 </script>
 
 <template>
