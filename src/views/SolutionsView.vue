@@ -1,52 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from 'vue-router';
+import { useSolutionsStore } from '../stores/solutions'; // استيراد الـ store
 
 const { t } = useI18n();
+const router = useRouter();
+const solutionsStore = useSolutionsStore();
 
-const solutions = ref([
-  {
-    id: 1,
-    title: t("solutions.costSaving.title"),
-    content: t("solutions.costSaving.content"),
-    icon: "pi-dollar",
-    benefits: [
-      "Reduce raw material costs by up to 40%",
-      "Lower waste disposal expenses",
-      "Quick return on investment",
-      "Minimize production downtime",
-    ],
-    image: "assets/images/products/machine3.jpeg",
-  },
-  {
-    id: 2,
-    title: t("solutions.environmental.title"),
-    content: t("solutions.environmental.content"),
-    icon: "pi-globe",
-    benefits: [
-      "Reduce carbon footprint",
-      "Meet sustainability goals",
-      "Minimize landfill waste",
-      "Support circular economy",
-    ],
-    image: "https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg",
-  },
-  {
-    id: 3,
-    title: t("solutions.comparison.title"),
-    content: t("solutions.comparison.content"),
-    icon: "pi-chart-bar",
-    benefits: [
-      "Smart monitoring systems",
-      "Higher processing efficiency",
-      "Reduced energy consumption",
-      "Advanced sorting capabilities",
-    ],
-    image: "assets/images/products/machine2.jpeg",
-  },
-]);
+// جلب البيانات من الـ Store
+const solutions = computed(() => solutionsStore.solutions);
 
-const features = ref([
+const features = [
+  // ... (نفس الـ features القديمة يمكن إبقاؤها هنا أو نقلها للستور أيضاً)
   {
     icon: "pi-cog",
     title: "Customizable Solutions",
@@ -67,7 +33,11 @@ const features = ref([
     title: "Expert Support",
     description: "24/7 technical support and maintenance services",
   },
-]);
+];
+
+const viewSolution = (id: number) => {
+  router.push({ name: 'solution-details', params: { id } });
+}
 </script>
 
 <template>
@@ -94,21 +64,21 @@ const features = ref([
             :data-aos-delay="solution.id * 100"
           >
             <div class="solution-image">
-              <img :src="solution.image" :alt="solution.title" />
+              <img :src="solution.image" :alt="t(`solutions.${solution.translationKey}.title`)" />
               <div class="solution-icon">
                 <i :class="`pi ${solution.icon}`"></i>
               </div>
             </div>
 
             <div class="solution-content">
-              <h2 class="solution-title">{{ solution.title }}</h2>
-              <p class="solution-description">{{ solution.content }}</p>
+              <h2 class="solution-title">{{ t(`solutions.${solution.translationKey}.title`) }}</h2>
+              <p class="solution-description">{{ t(`solutions.${solution.translationKey}.content`) }}</p>
 
               <div class="benefits-list">
                 <h3>Key Benefits:</h3>
                 <ul>
                   <li
-                    v-for="(benefit, index) in solution.benefits"
+                    v-for="(benefit, index) in solution.benefits.slice(0, 2)"
                     :key="index"
                   >
                     <i class="pi pi-check"></i>
@@ -116,6 +86,10 @@ const features = ref([
                   </li>
                 </ul>
               </div>
+              
+              <button @click="viewSolution(solution.id)" class="btn btn-outline full-width">
+                Learn More
+              </button>
             </div>
           </div>
         </div>
@@ -123,7 +97,7 @@ const features = ref([
     </section>
 
     <section class="section features-section">
-      <div class="container">
+        <div class="container">
         <h2 class="section-title" data-aos="fade-up">
           Why Choose Our Solutions?
         </h2>
@@ -147,7 +121,7 @@ const features = ref([
     </section>
 
     <section class="section cta-section">
-      <div class="container">
+        <div class="container">
         <div class="cta-content" data-aos="fade-up">
           <h2>Ready to Transform Your Recycling Process?</h2>
           <p>
@@ -165,6 +139,14 @@ const features = ref([
 </template>
 
 <style scoped>
+/* نفس الستايلات القديمة مع إضافة كلاس للزر */
+.full-width {
+  width: 100%;
+  margin-top: var(--space-3);
+  cursor: pointer;
+}
+
+/* ... باقي الستايلات من ملفك الأصلي ... */
 .page-header {
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -219,6 +201,8 @@ const features = ref([
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform var(--transition-normal) ease,
     box-shadow var(--transition-normal) ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .solution-card:hover {
@@ -261,6 +245,9 @@ const features = ref([
 
 .solution-content {
   padding: var(--space-4);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .solution-title {
@@ -273,6 +260,10 @@ const features = ref([
   color: var(--color-gray-600);
   margin-bottom: var(--space-4);
   line-height: 1.6;
+}
+
+.benefits-list {
+  flex-grow: 1; /* لدفع الزر للأسفل */
 }
 
 .benefits-list h3 {

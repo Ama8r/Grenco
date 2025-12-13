@@ -20,8 +20,11 @@ const currentYear = new Date().getFullYear()
             <a href="https://www.facebook.com/Grenco.Company" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <i class="pi pi-facebook"></i>
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <!-- <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <i class="pi pi-instagram"></i>
+            </a> -->
+            <a href="https://wa.me/201152338718" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <i class="pi pi-whatsapp"></i>
             </a>
           </div>
         </div>

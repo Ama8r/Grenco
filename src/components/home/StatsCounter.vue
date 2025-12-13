@@ -15,7 +15,7 @@ const stats = ref([
   {
     label: t("stats.plasticType"),
     value: 0,
-    target: 12,
+    target: 5,
     icon: "pi-filter",
     suffix: "",
   },
@@ -26,13 +26,6 @@ const stats = ref([
     icon: "pi-users",
     suffix: "+",
   },
-  // {
-  //   label: t("stats.countries"),
-  //   value: 0,
-  //   target: 10,
-  //   icon: "pi-globe",
-  //   suffix: "",
-  // },
 ]);
 
 const startCounting = () => {
@@ -55,7 +48,6 @@ const startCounting = () => {
   });
 };
 
-// In a production app, we'd use Intersection Observer for this
 onMounted(() => {
   setTimeout(startCounting, 500);
 });
@@ -63,6 +55,8 @@ onMounted(() => {
 
 <template>
   <section class="stats-section">
+    <div class="stats-background"></div>
+    
     <div class="container">
       <div class="stats-grid" data-aos="fade-up">
         <div
@@ -75,8 +69,8 @@ onMounted(() => {
             <i :class="`pi ${stat.icon}`"></i>
           </div>
           <div class="stat-value">
-            <span class="counter">{{ stat.value }}</span
-            ><span class="suffix">{{ stat.suffix }}</span>
+            <span class="counter">{{ stat.value }}</span>
+            <span class="suffix">{{ stat.suffix }}</span>
           </div>
           <div class="stat-label">{{ stat.label }}</div>
         </div>
@@ -90,12 +84,14 @@ onMounted(() => {
   padding: var(--space-6) 0;
   background-color: var(--color-primary);
   color: var(--color-white);
-  position: center;
+  /* تصحيح: position: center غير موجودة في CSS، نستخدم relative للتحكم في العناصر المطلقة داخله */
+  position: relative; 
   overflow: hidden;
+  z-index: 1; /* لضمان ظهور المحتوى فوق الخلفية */
 }
 
-.stats-section::before {
-  content: "";
+/* تنسيق الخلفية الشفافة */
+.stats-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -104,14 +100,17 @@ onMounted(() => {
   background-image: url("https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg");
   background-size: cover;
   background-position: center;
-  opacity: 0.1;
+  opacity: 0.15; /* يمكنك زيادة أو تقليل هذا الرقم للتحكم في شفافية الصورة */
+  z-index: -1; /* جعل الصورة خلف النصوص */
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* التعديل هنا: استخدام Flexbox لتوسيط العناصر في المنتصف */
+  display: flex;
+  justify-content: center; /* توسيط أفقي */
+  align-items: center;     /* توسيط عمودي (إذا لزم الأمر) */
+  flex-wrap: wrap;        /* السماح بنزول العناصر للسطر التالي في الشاشات الصغيرة */
   gap: var(--space-4);
-  position: center;
 }
 
 .stat-item {
@@ -120,6 +119,10 @@ onMounted(() => {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   transition: transform var(--transition-normal) ease;
+  
+  /* تحديد عرض ثابت أو مرن لضمان التناسق */
+  flex: 0 1 250px; /* Base width 250px */
+  min-width: 200px;
 }
 
 .stat-item:hover {
@@ -147,11 +150,5 @@ onMounted(() => {
 .stat-label {
   font-size: var(--font-size-lg);
   opacity: 0.9;
-}
-
-@media (min-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 </style>

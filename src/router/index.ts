@@ -45,6 +45,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/solutions/:id',
+      name: 'solution-details',
+      component: () => import('../views/SolutionDetailsView.vue'),
+      meta: {
+        title: 'Solution Details'
+      }
+    },
+    {
       path: '/news',
       name: 'news',
       component: () => import('../views/NewsView.vue'),
