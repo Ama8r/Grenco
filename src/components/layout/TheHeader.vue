@@ -87,51 +87,39 @@ const navLinks = computed(() => [
             class="nav-item"
             :class="{ 
               'has-dropdown': link.children,
-              'dropdown-active': openMobileDropdown === link.name // كلاس للتحكم في الفتح
+              'dropdown-active': openMobileDropdown === link.name
             }" 
           >
-            <router-link
-              v-if="!link.children"
-              :to="{ name: link.route }"
-              class="nav-link"
-              :class="{ 'active': isActiveRoute(link.route) }"
-              @click="mobileMenuOpen = false"
-            >
-              {{ link.name }}
-            </router-link>
-
-            <div v-else class="dropdown-wrapper">
-              <div 
-                class="nav-link dropdown-trigger"
+            <div class="nav-link-wrapper" :class="{ 'has-children': link.children }">
+              <router-link
+                :to="{ name: link.route }"
+                class="nav-link"
                 :class="{ 'active': isActiveRoute(link.route) }"
-                @click="toggleDropdown(link.name)"
+                @click="mobileMenuOpen = false"
               >
-                <span>{{ link.name }}</span>
+                {{ link.name }}
+              </router-link>
+
+              <div 
+                v-if="link.children"
+                class="dropdown-toggle-icon"
+                @click.stop="toggleDropdown(link.name)"
+              >
                 <i class="pi pi-angle-down dropdown-icon"></i>
               </div>
-
-              <ul class="dropdown-menu">
-                <li class="mobile-only-item">
-                   <!-- <router-link 
-                    :to="{ name: link.route }"
-                    class="dropdown-item view-all"
-                    @click="mobileMenuOpen = false"
-                  >
-                    {{ t('nav.viewAll') || 'View All' }}
-                  </router-link> -->
-                </li>
-
-                <li v-for="child in link.children" :key="child.id">
-                  <router-link 
-                    :to="{ name: child.route, params: { id: child.id } }"
-                    class="dropdown-item"
-                    @click="mobileMenuOpen = false"
-                  >
-                    {{ child.name }}
-                  </router-link>
-                </li>
-              </ul>
             </div>
+
+            <ul v-if="link.children" class="dropdown-menu">
+              <li v-for="child in link.children" :key="child.id">
+                <router-link 
+                  :to="{ name: child.route, params: { id: child.id } }"
+                  class="dropdown-item"
+                  @click="mobileMenuOpen = false"
+                >
+                  {{ child.name }}
+                </router-link>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>
@@ -193,6 +181,7 @@ const navLinks = computed(() => [
 .nav-item { position: relative; }
 
 .nav-link {
+  flex-grow: 1;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -208,6 +197,15 @@ const navLinks = computed(() => [
 .nav-link:hover, .nav-link.active {
   color: var(--color-primary);
 }
+
+
+.nav-link-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 
 .dropdown-icon {
   font-size: 0.8rem;
@@ -251,6 +249,14 @@ const navLinks = computed(() => [
   background-color: var(--color-primary);
 }
 
+.dropdown-toggle-icon {
+  display: none; /* مخفية في الديسك توب */
+  padding: 10px 15px;
+  cursor: pointer;
+  color: var(--color-gray-600);
+}
+
+
 /* Desktop Hover Effect */
 @media (min-width: 1024px) {
   .has-dropdown:hover .dropdown-menu {
@@ -266,6 +272,24 @@ const navLinks = computed(() => [
   .mobile-only-item {
     display: none;
   }
+
+  .dropdown-toggle-icon {
+    display: none; 
+  }
+  
+  /* إضافة سهم صغير بجانب النص في الديسك توب (اختياري) عبر CSS pseudo-element */
+  .has-children .nav-link::after {
+    content: '\e902'; /* كود أيقونة angle-down في primeicons */
+    font-family: 'primeicons';
+    font-size: 0.7em;
+    margin-left: 5px;
+  }
+  
+  :deep(.rtl) .has-children .nav-link::after {
+    margin-left: 0;
+    margin-right: 5px;
+  }
+
 }
 
 /* --- Header Actions --- */
@@ -443,5 +467,29 @@ const navLinks = computed(() => [
   :deep(.rtl) .dropdown-item {
     padding: 12px 30px 12px 20px;
   }
+
+  .nav-link-wrapper {
+    border-bottom: 1px solid var(--color-gray-100); /* الخط الفاصل أسفل الرابط */
+  }
+
+  /* إظهار أيقونة الفتح في الموبايل */
+  .dropdown-toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--color-gray-100); /* فاصل عمودي صغير */
+  }
+
+  /* في العربية نعكس الفاصل */
+  :deep(.rtl) .dropdown-toggle-icon {
+    border-left: none;
+    border-right: 1px solid var(--color-gray-100);
+  }
+
+  .nav-link {
+    padding: 15px 0;
+    font-size: 1.1rem;
+  }
+
 }
 </style>
