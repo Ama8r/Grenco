@@ -64,25 +64,39 @@ const MOCK_NEWS = {
 
 export const useNewsStore = defineStore("news", () => {
   const news = ref<NewsEntry[]>([]);
+  // 1. إعادة تعريف المتغيرات المفقودة لإصلاح الأخطاء في القوالب (Templates)
+  const loading = ref(false);
+  const error = ref<string | null>(null);
 
-  // دالة متزامنة تقوم بتعيين البيانات مباشرة
-  const fetchNews = (currentLocale = "en-US") => {
-    const localeKey = currentLocale === "ar" ? "ar" : "en-US";
-    news.value = MOCK_NEWS[localeKey] || MOCK_NEWS["en-US"];
+  // 2. تحويل الدالة إلى async لكي تعيد Promise وتعمل مع .then() في NewsDetailsView
+  const fetchNews = async (currentLocale = "en-US") => {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      // محاكاة بسيطة للعملية (اختياري)
+      const localeKey = currentLocale === "ar" ? "ar" : "en-US";
+      // @ts-ignore
+      news.value = MOCK_NEWS[localeKey] || MOCK_NEWS["en-US"];
+    } catch (err) {
+      error.value = "Failed to load news";
+    } finally {
+      loading.value = false;
+    }
   };
 
-  // دالة جلب خبر معين بالمعرف
   const getArticleById = (
     id: string,
     currentLocale = "en-US"
   ): NewsEntry | undefined => {
     const localeKey = currentLocale === "ar" ? "ar" : "en-US";
+    // @ts-ignore
     const articles = MOCK_NEWS[localeKey] || MOCK_NEWS["en-US"];
-    return articles.find((article) => article.id === id);
+    return articles.find((article: NewsEntry) => article.id === id);
   };
 
-  // قمنا بإزالة loading و error لأنهما لم يعودا ضروريين
-  return { news, fetchNews, getArticleById };
+  // 3. تصدير المتغيرات الجديدة
+  return { news, loading, error, fetchNews, getArticleById };
 });
 
 // import { defineStore } from "pinia";

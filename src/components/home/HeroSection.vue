@@ -19,7 +19,8 @@ const startSlideShow = () => {
   // التأكد من عدم وجود مؤقت سابق
   if (slideInterval) clearInterval(slideInterval);
 
-  slideInterval = setInterval(() => {
+  // التصحيح هنا: استخدام window.setInterval للتأكد من إرجاع رقم (number)
+  slideInterval = window.setInterval(() => {
     currentImageIndex.value = (currentImageIndex.value + 1) % heroImages.length;
   }, 5000);
 };
