@@ -1,106 +1,109 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
-import { useProductsStore } from '../../stores/products'
-import { useSolutionsStore } from '../../stores/solutions'
+import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
+import { useProductsStore } from "../../stores/products";
+import { useSolutionsStore } from "../../stores/solutions";
 
-const { t, locale } = useI18n()
-const route = useRoute()
-const productsStore = useProductsStore()
-const solutionsStore = useSolutionsStore()
+const { t, locale } = useI18n();
+const route = useRoute();
+const productsStore = useProductsStore();
+const solutionsStore = useSolutionsStore();
 
-const mobileMenuOpen = ref(false)
+const mobileMenuOpen = ref(false);
 // متغير لتخزين اسم القائمة المفتوحة حالياً في الموبايل
-const openMobileDropdown = ref<string | null>(null)
+const openMobileDropdown = ref<string | null>(null);
 
 const toggleLanguage = () => {
-  locale.value = locale.value === 'en' ? 'ar' : 'en'
-}
+  locale.value = locale.value === "en" ? "ar" : "en";
+};
 
 const toggleMobileMenu = () => {
-  mobileMenuOpen.value = !mobileMenuOpen.value
+  mobileMenuOpen.value = !mobileMenuOpen.value;
   // إغلاق القوائم الفرعية عند غلق القائمة الرئيسية
   if (!mobileMenuOpen.value) {
-    openMobileDropdown.value = null
+    openMobileDropdown.value = null;
   }
-}
+};
 
 // دالة لفتح/غلق القائمة الفرعية في الموبايل
 const toggleDropdown = (name: string) => {
   if (openMobileDropdown.value === name) {
-    openMobileDropdown.value = null // إغلاق إذا كانت مفتوحة
+    openMobileDropdown.value = null; // إغلاق إذا كانت مفتوحة
   } else {
-    openMobileDropdown.value = name // فتح الجديدة
+    openMobileDropdown.value = name; // فتح الجديدة
   }
-}
+};
 
 const isActiveRoute = computed(() => {
-  return (routeName: string) => route.name === routeName
-})
-
+  return (routeName: string) => route.name === routeName;
+});
 
 const navLinks = computed(() => [
-  { name: t('nav.home'), route: 'home' },
-  { name: t('nav.about'), route: 'about' },
-  { 
-    name: t('nav.products'), 
-    route: 'products',
-    children: productsStore.products.map(product => ({
+  { name: t("nav.home"), route: "home" },
+  { name: t("nav.about"), route: "about" },
+  {
+    name: t("nav.products"),
+    route: "products",
+    children: productsStore.products.map((product) => ({
       id: product.id,
-      name: product.name,
-      route: 'product-details'
-    }))
+      // التعديل هنا: جلب الاسم بناءً على اللغة الحالية
+      name: product.name[locale.value === "ar" ? "ar" : "en"],
+      route: "product-details",
+    })),
   },
-  { 
-    name: t('nav.solutions'), 
-    route: 'solutions',
-    children: solutionsStore.solutions.map(solution => ({
+  {
+    name: t("nav.solutions"),
+    route: "solutions",
+    children: solutionsStore.solutions.map((solution) => ({
       id: solution.id,
       name: t(`solutions.${solution.translationKey}.title`),
-      route: 'solution-details'
-    }))
+      route: "solution-details",
+    })),
   },
-  { name: t('nav.news'), route: 'news' },
-  { name: t('nav.contact'), route: 'contact' }
-])
+  { name: t("nav.news"), route: "news" },
+  { name: t("nav.contact"), route: "contact" },
+]);
 </script>
 
 <template>
   <header class="header" :class="{ 'header-scrolled': true }">
     <div class="container header-container">
       <router-link to="/" class="logo">
-        <img src="/src/assets/images/grencoLogo.png" alt="Grenco" width="120" />
+        <img src="/assets/grencoLogo.png" alt="Grenco" width="140" />
       </router-link>
-      
-      <div 
-        class="mobile-overlay" 
-        :class="{ 'show': mobileMenuOpen }"
+
+      <div
+        class="mobile-overlay"
+        :class="{ show: mobileMenuOpen }"
         @click="mobileMenuOpen = false"
       ></div>
 
       <nav class="main-nav" :class="{ 'mobile-nav-open': mobileMenuOpen }">
         <ul class="nav-list">
-          <li 
-            v-for="link in navLinks" 
-            :key="link.route" 
+          <li
+            v-for="link in navLinks"
+            :key="link.route"
             class="nav-item"
-            :class="{ 
+            :class="{
               'has-dropdown': link.children,
-              'dropdown-active': openMobileDropdown === link.name
-            }" 
+              'dropdown-active': openMobileDropdown === link.name,
+            }"
           >
-            <div class="nav-link-wrapper" :class="{ 'has-children': link.children }">
+            <div
+              class="nav-link-wrapper"
+              :class="{ 'has-children': link.children }"
+            >
               <router-link
                 :to="{ name: link.route }"
                 class="nav-link"
-                :class="{ 'active': isActiveRoute(link.route) }"
+                :class="{ active: isActiveRoute(link.route) }"
                 @click="mobileMenuOpen = false"
               >
                 {{ link.name }}
               </router-link>
 
-              <div 
+              <div
                 v-if="link.children"
                 class="dropdown-toggle-icon"
                 @click.stop="toggleDropdown(link.name)"
@@ -111,7 +114,7 @@ const navLinks = computed(() => [
 
             <ul v-if="link.children" class="dropdown-menu">
               <li v-for="child in link.children" :key="child.id">
-                <router-link 
+                <router-link
                   :to="{ name: child.route, params: { id: child.id } }"
                   class="dropdown-item"
                   @click="mobileMenuOpen = false"
@@ -123,14 +126,21 @@ const navLinks = computed(() => [
           </li>
         </ul>
       </nav>
-      
+
       <div class="header-actions">
         <button @click="toggleLanguage" class="lang-switcher">
-          {{ locale === 'en' ? 'AR' : 'EN' }}
+          {{ locale === "en" ? "AR" : "EN" }}
         </button>
-        
-        <button class="mobile-menu-toggle" @click="toggleMobileMenu" :aria-expanded="mobileMenuOpen">
-          <span class="hamburger" :class="{ 'is-active': mobileMenuOpen }"></span>
+
+        <button
+          class="mobile-menu-toggle"
+          @click="toggleMobileMenu"
+          :aria-expanded="mobileMenuOpen"
+        >
+          <span
+            class="hamburger"
+            :class="{ 'is-active': mobileMenuOpen }"
+          ></span>
         </button>
       </div>
     </div>
@@ -141,7 +151,9 @@ const navLinks = computed(() => [
 /* --- Base Styles --- */
 .header {
   position: fixed;
-  top: 0; left: 0; width: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
   background-color: transparent;
   transition: all 0.3s ease;
@@ -178,7 +190,9 @@ const navLinks = computed(() => [
   align-items: center;
 }
 
-.nav-item { position: relative; }
+.nav-item {
+  position: relative;
+}
 
 .nav-link {
   flex-grow: 1;
@@ -194,10 +208,10 @@ const navLinks = computed(() => [
   padding: 5px 0;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
   color: var(--color-primary);
 }
-
 
 .nav-link-wrapper {
   display: flex;
@@ -205,7 +219,6 @@ const navLinks = computed(() => [
   justify-content: space-between;
   width: 100%;
 }
-
 
 .dropdown-icon {
   font-size: 0.8rem;
@@ -220,12 +233,12 @@ const navLinks = computed(() => [
   left: 0;
   background-color: var(--color-white);
   min-width: 240px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 10px 0;
   list-style: none;
   z-index: 100;
-  
+
   /* تأثير الظهور */
   opacity: 0;
   visibility: hidden;
@@ -239,7 +252,7 @@ const navLinks = computed(() => [
   color: var(--color-gray-700);
   font-size: 0.9rem;
   transition: all 0.2s;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .dropdown-item:hover {
@@ -256,7 +269,6 @@ const navLinks = computed(() => [
   color: var(--color-gray-600);
 }
 
-
 /* Desktop Hover Effect */
 @media (min-width: 1024px) {
   .has-dropdown:hover .dropdown-menu {
@@ -264,7 +276,7 @@ const navLinks = computed(() => [
     visibility: visible;
     transform: translateY(0);
   }
-  
+
   .has-dropdown:hover .dropdown-icon {
     transform: rotate(180deg);
   }
@@ -274,22 +286,21 @@ const navLinks = computed(() => [
   }
 
   .dropdown-toggle-icon {
-    display: none; 
+    display: none;
   }
-  
+
   /* إضافة سهم صغير بجانب النص في الديسك توب (اختياري) عبر CSS pseudo-element */
   .has-children .nav-link::after {
-    content: '\e902'; /* كود أيقونة angle-down في primeicons */
-    font-family: 'primeicons';
+    content: "\e902"; /* كود أيقونة angle-down في primeicons */
+    font-family: "primeicons";
     font-size: 0.7em;
     margin-left: 5px;
   }
-  
+
   :deep(.rtl) .has-children .nav-link::after {
     margin-left: 0;
     margin-right: 5px;
   }
-
 }
 
 /* --- Header Actions --- */
@@ -338,8 +349,9 @@ const navLinks = computed(() => [
   transition: all 0.3s ease;
 }
 
-.hamburger::before, .hamburger::after {
-  content: '';
+.hamburger::before,
+.hamburger::after {
+  content: "";
   position: absolute;
   width: 24px;
   height: 2px;
@@ -348,18 +360,33 @@ const navLinks = computed(() => [
   left: 0;
 }
 
-.hamburger::before { top: -7px; }
-.hamburger::after { top: 7px; }
+.hamburger::before {
+  top: -7px;
+}
+.hamburger::after {
+  top: 7px;
+}
 
-.hamburger.is-active { background-color: transparent; }
-.hamburger.is-active::before { top: 0; transform: rotate(45deg); }
-.hamburger.is-active::after { top: 0; transform: rotate(-45deg); }
+.hamburger.is-active {
+  background-color: transparent;
+}
+.hamburger.is-active::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+.hamburger.is-active::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
 
 /* --- Mobile Overlay --- */
 .mobile-overlay {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 998;
   opacity: 0;
   visibility: hidden;
@@ -386,9 +413,9 @@ const navLinks = computed(() => [
     background-color: white;
     z-index: 999;
     padding: 80px 20px 20px;
-    transition: right 0.3s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+    transition: right 0.3s cubic-bezier(0.77, 0.2, 0.05, 1);
     overflow-y: auto;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
   }
 
   .main-nav.mobile-nav-open {
@@ -416,7 +443,8 @@ const navLinks = computed(() => [
     border-bottom: 1px solid var(--color-gray-100);
   }
 
-  .nav-link, .dropdown-trigger {
+  .nav-link,
+  .dropdown-trigger {
     padding: 15px 0;
     font-size: 1.1rem;
     width: 100%;
@@ -430,7 +458,7 @@ const navLinks = computed(() => [
     box-shadow: none;
     width: 100%;
     padding: 0;
-    
+
     /* Animation for height */
     max-height: 0;
     opacity: 0;
@@ -490,6 +518,5 @@ const navLinks = computed(() => [
     padding: 15px 0;
     font-size: 1.1rem;
   }
-
 }
 </style>

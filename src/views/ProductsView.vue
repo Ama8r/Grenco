@@ -1,45 +1,60 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useProductsStore } from '../stores/products'
-import { useRouter } from 'vue-router'
+import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { useProductsStore } from "../stores/products";
+import { useRouter } from "vue-router";
 
-const { t } = useI18n()
-const productsStore = useProductsStore()
-const router = useRouter()
+const { t, locale } = useI18n();
+const productsStore = useProductsStore();
+const router = useRouter();
 
+// تعديل الخاصية المحسوبة لتقوم بتهيئة البيانات حسب اللغة المختارة
 const filteredProducts = computed(() => {
-  return productsStore.products
-})
+  const currentLang = locale.value === "ar" ? "ar" : "en";
+
+  return productsStore.products.map((product) => ({
+    ...product,
+    // استخراج النص المناسب بناءً على اللغة
+    name: product.name[currentLang],
+    description: product.description[currentLang],
+    // تحويل المصفوفات المترجمة إلى مصفوفات نصوص عادية
+    plasticTypes: product.plasticTypes.map((pt) => pt[currentLang]),
+    features: product.features.map((f) => f[currentLang]),
+  }));
+});
 
 const viewProduct = (id: number) => {
-  router.push({ name: 'product-details', params: { id } })
-}
+  router.push({ name: "product-details", params: { id } });
+};
 
 const requestQuote = (id: number) => {
-  router.push({ 
-    name: 'contact',
-    query: { 
-      subject: `Quote request for product #${id}` 
-    } 
-  })
-}
+  // بما أن الاسم أصبح مترجماً، يمكننا إرساله أو إرسال المعرف فقط
+  // هنا نستخدم المعرف لضمان الدقة
+  router.push({
+    name: "contact",
+    query: {
+      subject: `Quote request for product #${id}`,
+    },
+  });
+};
 </script>
 
 <template>
   <div class="products-page">
     <div class="page-header">
       <div class="container">
-        <h1 class="page-title" data-aos="fade-up">{{ t('products.title') }}</h1>
-        <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">{{ t('products.subtitle') }}</p>
+        <h1 class="page-title" data-aos="fade-up">{{ t("products.title") }}</h1>
+        <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">
+          {{ t("products.subtitle") }}
+        </p>
       </div>
     </div>
-    
+
     <section class="section products-section">
       <div class="container">
         <div class="products-grid">
-          <div 
-            v-for="product in filteredProducts" 
+          <div
+            v-for="product in filteredProducts"
             :key="product.id"
             class="product-card"
             data-aos="fade-up"
@@ -51,12 +66,12 @@ const requestQuote = (id: number) => {
             <div class="product-content">
               <h3 class="product-title">{{ product.name }}</h3>
               <p class="product-description">{{ product.description }}</p>
-              
+
               <div class="product-plastics">
-                <h4>{{ t('products.plasticTypes') }}</h4>
+                <h4>{{ t("products.plasticTypes") }}</h4>
                 <div class="plastic-tags">
-                  <span 
-                    v-for="(type, index) in product.plasticTypes" 
+                  <span
+                    v-for="(type, index) in product.plasticTypes"
                     :key="index"
                     class="plastic-tag"
                   >
@@ -64,25 +79,35 @@ const requestQuote = (id: number) => {
                   </span>
                 </div>
               </div>
-              
+
               <div class="product-features">
-                <h4>{{ t('products.featureTitle') }}</h4>
+                <h4>{{ t("products.featureTitle") }}</h4>
                 <ul>
-                  <li v-for="(feature, index) in product.features.slice(0, 3)" :key="index">
+                  <li
+                    v-for="(feature, index) in product.features.slice(0, 3)"
+                    :key="index"
+                  >
                     <i class="pi pi-check"></i> {{ feature }}
                   </li>
                 </ul>
                 <span v-if="product.features.length > 3" class="more-features">
-                  +{{ product.features.length - 3 }} more features
+                  +{{ product.features.length - 3 }}
+                  {{ t("products.moreFeatures") || "more features" }}
                 </span>
               </div>
-              
+
               <div class="product-actions">
-                <button @click="viewProduct(product.id)" class="btn btn-primary">
-                  {{ t('products.learnMore') }}
+                <button
+                  @click="viewProduct(product.id)"
+                  class="btn btn-primary"
+                >
+                  {{ t("products.learnMore") }}
                 </button>
-                <button @click="requestQuote(product.id)" class="btn btn-outline">
-                  {{ t('products.requestQuote') }}
+                <button
+                  @click="requestQuote(product.id)"
+                  class="btn btn-outline"
+                >
+                  {{ t("products.requestQuote") }}
                 </button>
               </div>
             </div>
@@ -104,13 +129,13 @@ const requestQuote = (id: number) => {
 }
 
 .page-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg');
+  background-image: url("https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg");
   background-size: cover;
   background-position: center;
   opacity: 0.1;
@@ -145,26 +170,31 @@ const requestQuote = (id: number) => {
   background-color: var(--color-white);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform var(--transition-normal) ease,
+    box-shadow var(--transition-normal) ease;
   display: flex;
   flex-direction: column;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
-  height: 250px;
+  height: 240px;
   overflow: hidden;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* عرض الصورة بالكامل دون قص */
   transition: transform var(--transition-slow) ease;
 }
 

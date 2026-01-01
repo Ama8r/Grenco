@@ -5,7 +5,7 @@
     "home": "Home",
     "about": "About",
     "products": "Products",
-    "solutions": "Solutions",
+    "solutions": "Services",
     "news": "News",
     "contact": "Contact",
     "menu": "Menu",
@@ -42,25 +42,9 @@
     "featureTitle": "Smart Features",
     "requestQuote": "Request a Quote",
     "learnMore": "Learn More",
-    "specs": "Specifications",
+    "specs": "Sizes",
     "plasticTypes": "Supported Plastic Types",
     "customization": "Customization Options"
-  },
-  "solutions": {
-    "title": "Recycling Solutions",
-    "subtitle": "How Grenco helps businesses save costs and reduce waste",
-    "costSaving": {
-      "title": "Cost Savings",
-      "content": "Reduce production costs by recycling plastic waste directly into your manufacturing process."
-    },
-    "environmental": {
-      "title": "Environmental Impact",
-      "content": "Minimize waste and CO2 emissions with efficient recycling technology."
-    },
-    "comparison": {
-      "title": "Smart vs Traditional",
-      "content": "Compare the benefits of smart recycling against traditional methods."
-    }
   },
   "testimonials": {
     "title": "What Our Clients Say",
@@ -76,7 +60,8 @@
     "title": "News & Media",
     "subtitle": "Latest updates, blog posts, and events",
     "readMore": "Read More",
-    "allNews": "View All News"
+    "allNews": "View All News",
+    "backToNews": "Back to News"
   },
   "contact": {
     "title": "Contact Us",
@@ -102,5 +87,52 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "rights": "All Rights Reserved."
+  },
+  "solutions": {
+    "title": "Recycling Solutions",
+    "subtitle": "How Grenco helps businesses save costs and reduce waste",
+    "training": {
+      "title": "Training Workshops & Technical Seminars in Plastic Recycling",
+      "content": "Grenco provides professional training workshops and technical seminars in plastic recycling, designed for industrial professionals, startups, engineers, technicians, as well as schools and universities. Our programs focus on delivering practical, industry-oriented knowledge that bridges the gap between academic education and real-world recycling operations.\n\nThe training content is developed based on hands-on experience in plastic recycling machines, production lines, and automation systems. Participants gain a clear understanding of plastic materials, recycling processes, machine operation, industrial safety, and production efficiency, with a strong emphasis on sustainability and environmental impact.\n\nGrenco also offers educational training programs for schools and universities, supporting technical education, environmental awareness, and workforce preparation. All training modules can be customized to meet institutional curricula or specific industrial requirements."
+    },
+    "automation": {
+      "title": "Plastic Recycling Line Automation Solutions",
+      "content": "Grenco delivers advanced plastic recycling line automation solutions that convert traditional, labor-intensive operations into efficient and intelligent production systems. Our automation services help manufacturers reduce operational costs, improve production consistency, and enhance workplace safety.\n\nWe specialize in automation of plastic recycling machines and production lines, including control system integration, process monitoring, and optimization of material flow. Whether upgrading existing lines or designing new automated systems, Grenco ensures solutions tailored to production capacity, material type, and factory layout.\n\nAutomation enables better quality control, reduced material waste, and long-term scalability, making recycling operations more competitive and sustainable."
+    },
+    "consulting": {
+      "title": "Engineering Consulting for Plastic Recycling Projects",
+      "content": "Grenco offers professional engineering consulting services for plastic recycling projects, supporting clients from initial concept to full operation. Our consulting services are ideal for investors, factory owners, and entrepreneurs looking to build or optimize recycling facilities efficiently.\n\nOur expertise includes machine selection, recycling line design, production capacity planning, material analysis, and system performance evaluation. Each consulting project is based on a detailed technical and economic assessment to ensure optimal investment decisions and sustainable operation.\n\nBy combining engineering expertise with market knowledge, Grenco helps clients reduce risks, improve operational efficiency, and maximize return on investment in plastic recycling projects."
+    }
+  },
+  "solutionsPage": {
+    "keyBenefits": "Key Benefits:",
+    "learnMore": "Learn More",
+    "ctaTitle": "Ready to Transform Your Recycling Process?",
+    "ctaText": "Contact us today to discuss your specific requirements and find the perfect solution.",
+    "features": {
+      "customizable": {
+        "title": "Customizable Solutions",
+        "desc": "Tailor our machines to your specific needs and requirements"
+      },
+      "smart": {
+        "title": "Smart Controls",
+        "desc": "Monitor and control your recycling operations from anywhere"
+      },
+      "analytics": {
+        "title": "Data Analytics",
+        "desc": "Make informed decisions with real-time performance data"
+      },
+      "support": {
+        "title": "Expert Support",
+        "desc": "24/7 technical support and maintenance services"
+      }
+    }
+  },
+  "solutionDetails": {
+    "overview": "Service Overview",
+    "whyMatters": "Why this matters?",
+    "whyMattersContent": "Implementing this solution directly impacts your operational efficiency and long-term sustainability goals. Our technology ensures seamless integration with your existing workflow.",
+    "keyAdvantages": "Key Advantages",
+    "requestConsultation": "Request Consultation"
   }
 }

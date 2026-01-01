@@ -1,45 +1,107 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
 
-const features = ref([
+const { locale } = useI18n();
+
+// البيانات الخام تحتوي على اللغتين معاً
+const rawFeatures = [
   {
     icon: "pi-bolt",
-    title: "Energy Efficient",
-    description:
-      "The machine optimizes power use without affecting performance, reducing operating costs while staying efficient.",
     color: "#00c853",
+    en: {
+      title: "Energy Efficient",
+      description:
+        "The machine optimizes power use without affecting performance, reducing operating costs while staying efficient.",
+    },
+    ar: {
+      title: "كفاءة في استهلاك الطاقة",
+      description:
+        "تحسين استهلاك الطاقة دون التأثير على الأداء، مما يقلل تكاليف التشغيل مع الحفاظ على الكفاءة العالية.",
+    },
   },
   {
     icon: "pi-cog",
-    title: "Customizable Manufacturing",
-    description: "We customize the machine’s manufacturing process to suit the plastic types used by each workshop or factory.",
     color: "#1e88e5",
+    en: {
+      title: "Customizable Manufacturing",
+      description:
+        "We customize the machine’s manufacturing process to suit the plastic types used by each workshop or factory.",
+    },
+    ar: {
+      title: "تصنيع قابل للتخصيص",
+      description:
+        "نقوم بتخصيص عملية تصنيع الماكينة لتناسب أنواع البلاستيك المستخدمة في كل ورشة أو مصنع.",
+    },
   },
   {
     icon: "pi-mobile",
-    title: "Smart Controls",
-    description: "The machine can be fully monitored and controlled remotely through the Grenco app with instant alerts.",
     color: "#7b1fa2",
+    en: {
+      title: "Smart Controls",
+      description:
+        "The machine can be fully monitored and controlled remotely through the Grenco app with instant alerts.",
+    },
+    ar: {
+      title: "تحكم ذكي عن بُعد",
+      description:
+        "يمكن مراقبة الماكينة والتحكم فيها بالكامل عن بُعد من خلال تطبيق Grenco مع تنبيهات فورية.",
+    },
   },
   {
     icon: "pi-chart-line",
-    title: "Machine Performance Analytics",
-    description: "A smart dashboard shows real-time productivity, efficiency, and waste data to improve quality and decisions.",
     color: "#ff6d00",
+    en: {
+      title: "Machine Performance Analytics",
+      description:
+        "A smart dashboard shows real-time productivity, efficiency, and waste data to improve quality and decisions.",
+    },
+    ar: {
+      title: "تحليلات أداء الماكينة",
+      description:
+        "لوحة تحكم ذكية تعرض بيانات الإنتاجية والكفاءة والهدر لحظياً لتحسين الجودة واتخاذ القرارات.",
+    },
   },
   {
     icon: "pi-filter",
-    title: "Multi-material Equipment",
-    description: "We design equipment capable of processing plastics like PET, PP, and HDPE with tuning for each material.",
     color: "#2962ff",
+    en: {
+      title: "Multi-material Equipment",
+      description:
+        "We design equipment capable of processing plastics like PET, PP, and HDPE with tuning for each material.",
+    },
+    ar: {
+      title: "معدات متعددة المواد",
+      description:
+        "نصمم معدات قادرة على معالجة أنواع مختلفة من البلاستيك مثل PET و PP و HDPE مع ضبط دقيق لكل مادة.",
+    },
   },
   {
     icon: "pi-check-circle",
-    title: "Quality Assurance",
-    description: "An intelligent system remotely monitors final product quality to ensure stability and reduce operational errors.",
     color: "#00bcd4",
+    en: {
+      title: "Quality Assurance",
+      description:
+        "An intelligent system remotely monitors final product quality to ensure stability and reduce operational errors.",
+    },
+    ar: {
+      title: "ضمان الجودة",
+      description:
+        "نظام ذكي يراقب جودة المنتج النهائي عن بُعد لضمان استقرار الإنتاج وتقليل أخطاء التشغيل.",
+    },
   },
-]);
+];
+
+// خاصية محسوبة لتبديل اللغة تلقائياً
+const features = computed(() => {
+  return rawFeatures.map((feature) => ({
+    icon: feature.icon,
+    color: feature.color,
+    title: locale.value === "ar" ? feature.ar.title : feature.en.title,
+    description:
+      locale.value === "ar" ? feature.ar.description : feature.en.description,
+  }));
+});
 </script>
 
 <template>

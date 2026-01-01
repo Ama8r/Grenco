@@ -1,70 +1,30 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import { useProductsStore } from "../../stores/products"; // استيراد الستور
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const router = useRouter();
+const productsStore = useProductsStore(); // استخدام الستور
 
-// Sample products data  
-const products = ref([
-  // {
-  //   id: 1,
-  //   name: "EcoGrind S100",
-  //   image: "assets/images/products/machine1.jpeg",
-  //   description:
-  //     "Compact plastic grinding machine optimized for small workshops",
-  //   plasticTypes: ["PET", "HDPE", "LDPE"],
-  //   features: [
-  //     "Smart energy management",
-  //     "Remote monitoring",
-  //     "Customizable grinding settings",
-  //   ],
-  // }
-  {
-    id: 1,
-    name: "Screws & Barrels",
-    image: "https://iili.io/fRnRayb.md.png",
-    description:
-      "Grenco’s Screws & Barrels are engineered to deliver exceptional performance in injection molding, extrusion, and recycling applications.  ",
-    //plasticTypes: ["PET", "HDPE", "LDPE"],
-    features: [
-      "Precision-crafted design",
-      "High-strength steel",
-      "Advanced heat-treatment",
-      "Fully customized manufacturing",    ],  
-  },
-  {
-    id: 2,
-    name: "Plastic Shredder Machines",
-    image: "https://iili.io/fRois0G.md.png",
-    description: "Medium capacity recycling solution for diverse plastic types",
-    plasticTypes: ["PET", "HDPE", "LDPE", "PP", "PS"],
-    features: [
-        'Efficient plastic shredding',
-        'Multiple customizable sizes',
-        'Reinforced steel structure',
-        'Smart overload protection',
-        'Low energy consumption',
-        'Quick maintenance access'
-    ],
-  },
-  {
-    id: 3,
-    name: "Mini Plastic Recycling Machines",
-    image: "https://iili.io/fRoIWAv.md.png",
-    description:
-      "Compact, smart recycling machines supporting multiple processes with intelligent monitoring for continuous operation",
-    plasticTypes: ["All major plastic types"],
-    features: [
-      "Compact versatile design",
-      "Perfect for workshops",
-      "Smart IIoT control",
-      "User-friendly interface",
-      "Energy-efficient performance",
-    ],
-  },
-]);
+// جلب المنتجات من الستور وتهيئتها حسب اللغة الحالية
+const products = computed(() => {
+  const currentLang = locale.value === "ar" ? "ar" : "en";
+
+  // نأخذ أول 3 منتجات فقط للعرض في الصفحة الرئيسية
+  return productsStore.products.slice(0, 3).map((product) => ({
+    ...product,
+    name: product.name[currentLang],
+    description: product.description[currentLang],
+    // تحويل مصفوفة الميزات المترجمة إلى نصوص
+    features: product.features.map((f) => f[currentLang]),
+  }));
+});
+
+const navigateToContact = () => {
+  router.push({ name: "contact" });
+};
 
 const viewProduct = (id: number) => {
   router.push({ name: "product-details", params: { id } });
@@ -102,12 +62,17 @@ const viewAllProducts = () => {
           </div>
           <div class="product-content">
             <h3 class="product-title">{{ product.name }}</h3>
-            <p class="product-description">{{ product.description }}</p>
+            <p class="product-description line-clamp-2">
+              {{ product.description }}
+            </p>
 
             <div class="product-features">
               <h4>{{ t("products.featureTitle") }}</h4>
               <ul>
-                <li v-for="(feature, index) in product.features" :key="index">
+                <li
+                  v-for="(feature, index) in product.features.slice(0, 3)"
+                  :key="index"
+                >
                   <i class="pi pi-check"></i> {{ feature }}
                 </li>
               </ul>
@@ -117,7 +82,7 @@ const viewAllProducts = () => {
               <button @click="viewProduct(product.id)" class="btn btn-primary">
                 {{ t("products.learnMore") }}
               </button>
-              <button class="btn btn-outline">
+              <button @click="navigateToContact" class="btn btn-outline">
                 {{ t("products.requestQuote") }}
               </button>
             </div>
@@ -126,8 +91,8 @@ const viewAllProducts = () => {
       </div>
 
       <div class="text-center mt-5" data-aos="fade-up">
-        <button @click="viewAllProducts" class="btn btn-primary">
-          {{ t("products.title") }}
+        <button @click="viewAllProducts" class="btn btn-primary view-all-btn">
+          <span>{{ t("products.title") }}</span>
           <i class="pi pi-arrow-right"></i>
         </button>
       </div>
@@ -172,12 +137,16 @@ const viewAllProducts = () => {
 .product-image {
   height: 240px;
   overflow: hidden;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* عرض الصورة بالكامل دون قص */
   transition: transform var(--transition-slow) ease;
 }
 
@@ -198,6 +167,15 @@ const viewAllProducts = () => {
 .product-description {
   color: var(--color-gray-600);
   margin-bottom: var(--space-3);
+  min-height: 3rem; /* لضمان تساوي الارتفاعات تقريباً */
+}
+
+/* كلاس مساعد لقص النص الزائد */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .product-features {
@@ -218,13 +196,16 @@ const viewAllProducts = () => {
 .product-features li {
   display: flex;
   align-items: center;
+  gap: var(
+    --space-2
+  ); /* هذه الخاصية تضمن وجود مسافة بين الأيقونة والنص في اللغتين */
   margin-bottom: var(--space-1);
   color: var(--color-gray-700);
 }
 
 .product-features li i {
   color: var(--color-primary);
-  margin-right: var(--space-2);
+  /* تم إزالة الهوامش (margins) لأن gap تقوم بالمهمة الآن */
 }
 
 .product-actions {
@@ -254,5 +235,27 @@ const viewAllProducts = () => {
 :deep(.rtl) .product-features li i {
   margin-right: 0;
   margin-left: var(--space-2);
+}
+
+/* تنسيق الزر "عرض الكل" */
+.view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.view-all-btn:hover i {
+  transform: translateX(4px);
+}
+
+:deep(.rtl) .view-all-btn i {
+  transform: scaleX(-1);
+}
+
+:deep(.rtl) .view-all-btn:hover i {
+  transform: scaleX(-1) translateX(4px);
 }
 </style>

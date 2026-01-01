@@ -2,10 +2,11 @@
 import { onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useNewsStore } from "../stores/news";
+import { useRouter } from "vue-router";
 
 const { t, locale } = useI18n();
 const newsStore = useNewsStore();
-
+const router = useRouter();
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat(locale.value === "ar" ? "ar-EG" : "en-US", {
@@ -25,6 +26,10 @@ watch(
     newsStore.fetchNews(newLocale === "ar" ? "ar" : "en-US");
   }
 );
+
+const viewNewsDetails = (id: string) => {
+  router.push({ name: "news-details", params: { id } });
+};
 </script>
 
 <template>
@@ -75,7 +80,11 @@ watch(
               <h2 class="news-title">{{ article.title }}</h2>
               <p class="news-excerpt">{{ article.excerpt }}</p>
               <div class="news-body" v-html="article.content"></div>
-              <a href="#" class="news-link">
+              <a
+                href="javascript:void(0)"
+                @click.prevent="viewNewsDetails(article.id)"
+                class="news-link"
+              >
                 {{ t("news.readMore") }}
                 <i class="pi pi-arrow-right"></i>
               </a>

@@ -1,59 +1,186 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import contentful from '../contentful'
-import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
 export interface NewsEntry {
-  id: string
-  title: string
-  excerpt: string
-  content: string
-  date: string
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  date: string;
   image: {
-    url: string
-    title: string
-  }
-  category: string
+    url: string;
+    title: string;
+  };
+  category: string;
 }
 
-export const useNewsStore = defineStore('news', () => {
-  const news = ref<NewsEntry[]>([])
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+// بيانات ثابتة
+const MOCK_NEWS = {
+  "en-US": [
+    {
+      id: "1",
+      title:
+        "Grenco Wins 2nd Place at Smart Industry Hackathon, Creativa Beni Suef",
+      excerpt:
+        "After 4 days of fierce competition, Grenco secured 2nd place at the Smart Industry Hackathon.",
+      content: `
+        <p>After 4 days full of challenges and innovation and fierce competition among 17 teams, Grenco stood out and secured 2nd place at the Smart Industry Hackathon held at Creativa Beni Suef!</p>
+        <p>The competition was intense, with every team presenting innovative ideas and remarkable technical solutions, but Grenco’s project captured attention with its practical innovation and real-world impact.</p>
+        <p>The Smart Industry Hackathon journey was more than just a competition—it was an experience of intensive learning and preparation for the judges, filled with challenges that tested teams’ skills in design, execution, and creativity.</p>
+        <p>This achievement reflects the dedication, skill, and ingenuity of the Grenco team.</p>
+        <p>We are proud of this accomplishment, which highlights Grenco’s commitment to smart, sustainable recycling solutions and supports our ongoing journey toward continuous innovation. 🏆♻️</p>
+      `,
+      date: "2025-02-17",
+      image: {
+        url: "/assets/images/News/1.jpg",
+        title: "Grenco Team",
+      },
+      category: "Awards",
+    },
+  ],
+  ar: [
+    {
+      id: "1",
+      title:
+        "جرينكوا تفوز بالمركز الثاني في هاكاثون الصناعة الذكية، كريتيفا بني سويف",
+      excerpt:
+        "بعد 4 أيام من المنافسة القوية، حصلت جرينكوا على المركز الثاني في هاكاثون الصناعة الذكية.",
+      content: `
+        <p>بعد 4 أيام مليئة بالتحديات والابتكار والمنافسة الشرسة بين 17 فريقًا، تميزت جرينكوا وحصلت على المركز الثاني في هاكاثون الصناعة الذكية الذي أقيم في كريتيفا بني سويف!</p>
+        <p>كانت المنافسة شديدة، حيث قدم كل فريق أفكارًا مبتكرة وحلولًا تقنية رائعة، لكن مشروع جرينكوا لفت الأنظار بابتكاره العملي وتأثيره الواقعي.</p>
+        <p>لم تكن رحلة هاكاثون الصناعة الذكية مجرد مسابقة - بل كانت تجربة تعلم مكثف وتحضير للجنة التحكيم، مليئة بالتحديات التي اختبرت مهارات الفرق في التصميم والتنفيذ والإبداع.</p>
+        <p>يعكس هذا الإنجاز تفاني ومهارة وبراعة فريق جرينكوا.</p>
+        <p>نحن فخورون بهذا الإنجاز الذي يسلط الضوء على التزام جرينكوا بحلول إعادة التدوير الذكية والمستدامة ويدعم رحلتنا المستمرة نحو الابتكار المتواصل. 🏆♻️</p>
+      `,
+      date: "2025-02-17",
+      image: {
+        url: "/assets/images/News/1.jpg",
+        title: "فريق جرينكوا",
+      },
+      category: "جوائز",
+    },
+  ],
+};
 
-  const fetchNews = async (currentLocale = 'en-US') => {
-    loading.value = true
-    error.value = null
-  
-    try {
-      const response = await contentful.getEntries({
-        content_type: 'news',
-        order: ['-fields.date'] as any,
-        locale: currentLocale
-      })
-      
-      news.value = response.items.map((item: any) => ({
-        id: item.sys.id,
-        title: item.fields.title,
-        excerpt: item.fields.excerpt,
-        content: documentToHtmlString(item.fields.content),
-        date: item.fields.date,
-        image: {
-          url: item.fields.image?.fields?.file?.url 
-            ? `https:${item.fields.image.fields.file.url}`
-            : 'https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg',
-          title: item.fields.image?.fields?.title || 'News Image'
-        },
-        category: item.fields.category
-      }))
-    } catch (err: any) {
-      error.value = `Failed to fetch news: ${err.message || 'Unknown error'}`
-      console.error('Error fetching news:', err)
-    } finally {
-      loading.value = false
-    }
-  }
-  
+export const useNewsStore = defineStore("news", () => {
+  const news = ref<NewsEntry[]>([]);
 
-  return { news, loading, error, fetchNews }
-})
+  // دالة متزامنة تقوم بتعيين البيانات مباشرة
+  const fetchNews = (currentLocale = "en-US") => {
+    const localeKey = currentLocale === "ar" ? "ar" : "en-US";
+    news.value = MOCK_NEWS[localeKey] || MOCK_NEWS["en-US"];
+  };
+
+  // دالة جلب خبر معين بالمعرف
+  const getArticleById = (
+    id: string,
+    currentLocale = "en-US"
+  ): NewsEntry | undefined => {
+    const localeKey = currentLocale === "ar" ? "ar" : "en-US";
+    const articles = MOCK_NEWS[localeKey] || MOCK_NEWS["en-US"];
+    return articles.find((article) => article.id === id);
+  };
+
+  // قمنا بإزالة loading و error لأنهما لم يعودا ضروريين
+  return { news, fetchNews, getArticleById };
+});
+
+// import { defineStore } from "pinia";
+// import { ref } from "vue";
+
+// export interface NewsEntry {
+//   id: string;
+//   title: string;
+//   excerpt: string;
+//   content: string;
+//   date: string;
+//   image: {
+//     url: string;
+//     title: string;
+//   };
+//   category: string;
+// }
+
+// // بيانات ثابتة للخبر الجديد (مأخوذة من الملف النصي 1.txt)
+// const MOCK_NEWS = {
+//   "en-US": [
+//     {
+//       id: "1",
+//       title:
+//         "Grenco Wins 2nd Place at Smart Industry Hackathon, Creativa Beni Suef",
+//       excerpt:
+//         "After 4 days of fierce competition, Grenco secured 2nd place at the Smart Industry Hackathon.",
+//       content: `
+//         <p>After 4 days full of challenges and innovation and fierce competition among 17 teams, Grenco stood out and secured 2nd place at the Smart Industry Hackathon held at Creativa Beni Suef!</p>
+//         <p>The competition was intense, with every team presenting innovative ideas and remarkable technical solutions, but Grenco’s project captured attention with its practical innovation and real-world impact.</p>
+//         <p>The Smart Industry Hackathon journey was more than just a competition—it was an experience of intensive learning and preparation for the judges, filled with challenges that tested teams’ skills in design, execution, and creativity.</p>
+//         <p>This achievement reflects the dedication, skill, and ingenuity of the Grenco team.</p>
+//         <p>We are proud of this accomplishment, which highlights Grenco’s commitment to smart, sustainable recycling solutions and supports our ongoing journey toward continuous innovation. 🏆♻️</p>
+//       `,
+//       date: "2025-02-17",
+//       image: {
+//         url: "/assets/images/News/1.jpg",
+//         title: "Grenco Team",
+//       },
+//       category: "Awards",
+//     },
+//   ],
+//   ar: [
+//     {
+//       id: "1",
+//       title:
+//         "جرينكوا تفوز بالمركز الثاني في هاكاثون الصناعة الذكية، كريتيفا بني سويف",
+//       excerpt:
+//         "بعد 4 أيام من المنافسة القوية، حصلت جرينكوا على المركز الثاني في هاكاثون الصناعة الذكية.",
+//       content: `
+//         <p>بعد 4 أيام مليئة بالتحديات والابتكار والمنافسة الشرسة بين 17 فريقًا، تميزت جرينكوا وحصلت على المركز الثاني في هاكاثون الصناعة الذكية الذي أقيم في كريتيفا بني سويف!</p>
+//         <p>كانت المنافسة شديدة، حيث قدم كل فريق أفكارًا مبتكرة وحلولًا تقنية رائعة، لكن مشروع جرينكوا لفت الأنظار بابتكاره العملي وتأثيره الواقعي.</p>
+//         <p>لم تكن رحلة هاكاثون الصناعة الذكية مجرد مسابقة - بل كانت تجربة تعلم مكثف وتحضير للجنة التحكيم، مليئة بالتحديات التي اختبرت مهارات الفرق في التصميم والتنفيذ والإبداع.</p>
+//         <p>يعكس هذا الإنجاز تفاني ومهارة وبراعة فريق جرينكوا.</p>
+//         <p>نحن فخورون بهذا الإنجاز الذي يسلط الضوء على التزام جرينكوا بحلول إعادة التدوير الذكية والمستدامة ويدعم رحلتنا المستمرة نحو الابتكار المتواصل. 🏆♻️</p>
+//       `,
+//       date: "2025-02-17",
+//       image: {
+//         url: "/assets/images/News/1.jpg",
+//         title: "فريق جرينكوا",
+//       },
+//       category: "جوائز",
+//     },
+//   ],
+// };
+
+// export const useNewsStore = defineStore("news", () => {
+//   const news = ref<NewsEntry[]>([]);
+//   const loading = ref(false);
+//   const error = ref<string | null>(null);
+
+//   const fetchNews = async (currentLocale = "en-US") => {
+//     loading.value = true;
+//     error.value = null;
+
+//     // محاكاة جلب البيانات (يمكنك إرجاع كود Contentful لاحقاً)
+//     try {
+//       // نستخدم Timeout لمحاكاة الاتصال بالشبكة
+//       await new Promise((resolve) => setTimeout(resolve, 500));
+
+//       const localeKey = currentLocale === "ar" ? "ar" : "en-US";
+//       news.value = MOCK_NEWS[localeKey] || MOCK_NEWS["en-US"];
+//     } catch (err: any) {
+//       error.value = `Failed to fetch news: ${err.message || "Unknown error"}`;
+//     } finally {
+//       loading.value = false;
+//     }
+//   };
+
+//   // دالة جديدة لجلب خبر معين
+//   const getArticleById = (
+//     id: string,
+//     currentLocale = "en-US"
+//   ): NewsEntry | undefined => {
+//     const localeKey = currentLocale === "ar" ? "ar" : "en-US";
+//     const articles = MOCK_NEWS[localeKey] || MOCK_NEWS["en-US"];
+//     return articles.find((article) => article.id === id);
+//   };
+
+//   return { news, loading, error, fetchNews, getArticleById };
+// });

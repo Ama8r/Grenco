@@ -21,7 +21,11 @@ const viewAllNews = () => {
   router.push({ name: "news" });
 };
 
-// Fetch news when component mounts
+// دالة للانتقال للتفاصيل
+const viewNewsDetails = (id: string) => {
+  router.push({ name: "news-details", params: { id } });
+};
+
 onMounted(() => {
   newsStore.fetchNews(locale.value === "ar" ? "ar" : "en-US");
 });
@@ -46,25 +50,9 @@ watch(
         {{ t("news.subtitle") }}
       </p>
 
-      <!-- Loading State -->
-      <div v-if="newsStore.loading" class="loading-state">
-        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-        <p>Loading news...</p>
-      </div>
+      <div v-if="newsStore.loading" class="loading-state">...</div>
+      <div v-else-if="newsStore.error" class="error-state">...</div>
 
-      <!-- Error State -->
-      <div v-else-if="newsStore.error" class="error-state">
-        <i
-          class="pi pi-exclamation-triangle"
-          style="font-size: 2rem; color: var(--color-error)"
-        ></i>
-        <p>{{ newsStore.error }}</p>
-        <button @click="() => newsStore.fetchNews()" class="btn btn-primary">
-          Try Again
-        </button>
-      </div>
-
-      <!-- News Grid -->
       <div v-else class="news-grid">
         <div
           v-for="article in newsStore.news.slice(0, 3)"
@@ -72,33 +60,50 @@ watch(
           class="news-card"
           data-aos="fade-up"
         >
-          <div class="news-image">
+          <div
+            class="news-image"
+            @click="viewNewsDetails(article.id)"
+            style="cursor: pointer"
+          >
             <img :src="article.image.url" :alt="article.image.title" />
             <div class="news-category">{{ article.category }}</div>
           </div>
           <div class="news-content">
             <div class="news-date">{{ formatDate(article.date) }}</div>
-            <h3 class="news-title">{{ article.title }}</h3>
+            <h3
+              class="news-title"
+              @click="viewNewsDetails(article.id)"
+              style="cursor: pointer"
+            >
+              {{ article.title }}
+            </h3>
             <p class="news-excerpt">{{ article.excerpt }}</p>
-            <a href="#" class="news-link">{{ t("news.readMore") }}</a>
+
+            <a
+              href="javascript:void(0)"
+              @click.prevent="viewNewsDetails(article.id)"
+              class="news-link"
+            >
+              {{ t("news.readMore") }}
+              <i
+                class="pi"
+                :class="locale === 'ar' ? 'pi-arrow-left' : 'pi-arrow-right'"
+              ></i>
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Empty State -->
       <div
         v-if="
           !newsStore.loading && !newsStore.error && newsStore.news.length === 0
         "
         class="empty-state"
-      >
-        <i class="pi pi-inbox" style="font-size: 2rem"></i>
-        <p>No news articles available at the moment.</p>
-      </div>
+      ></div>
 
       <div class="text-center mt-5" data-aos="fade-up">
-        <button @click="viewAllNews" class="btn btn-primary">
-          {{ t("news.allNews") }}
+        <button @click="viewAllNews" class="btn btn-primary view-all-btn">
+          <span>{{ t("news.allNews") }}</span>
           <i class="pi pi-arrow-right"></i>
         </button>
       </div>
@@ -242,5 +247,37 @@ watch(
 
 :deep(.rtl) .news-link {
   flex-direction: row-reverse;
+}
+
+/* ... باقي الستايلات الموجودة مسبقاً ... */
+
+/* تنسيق الزر الجديد */
+.view-all-btn {
+  display: inline-flex; /* يجعل العناصر داخل الزر مرنة */
+  align-items: center; /* توسيط عمودي للنص والأيقونة */
+  justify-content: center; /* توسيط أفقي */
+  gap: var(--space-2); /* مسافة آمنة بين النص والأيقونة لا تتأثر باللغة */
+  padding-left: var(--space-4); /* تحسين الحشوة الداخلية */
+  padding-right: var(--space-4);
+}
+
+/* تحسين حركة السهم عند الوقوف على الزر */
+.view-all-btn:hover i {
+  transform: translateX(4px); /* تحريك السهم لليمين قليلاً */
+}
+
+/* تنسيقات خاصة باللغة العربية (RTL) */
+:deep(.rtl) .view-all-btn i {
+  transform: scaleX(-1); /* قلب السهم ليشير لليسار في العربي */
+}
+
+/* عكس حركة السهم في العربي عند الوقوف عليه */
+:deep(.rtl) .view-all-btn:hover i {
+  transform: scaleX(-1) translateX(4px); /* الحفاظ على القلب مع الحركة */
+}
+
+.news-title:hover {
+  color: var(--color-primary);
+  transition: color 0.3s;
 }
 </style>

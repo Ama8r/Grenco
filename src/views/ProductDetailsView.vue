@@ -1,80 +1,97 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
-//import { ref, computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
-import { useProductsStore } from '../stores/products'
+import { ref, computed, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
+import { useProductsStore } from "../stores/products";
 
-const { t } = useI18n()
-const route = useRoute()
-const router = useRouter()
-const productsStore = useProductsStore()
+const { t, locale } = useI18n();
+const route = useRoute();
+const router = useRouter();
+const productsStore = useProductsStore();
 
-// const product = computed(() => {
-//   const id = Number(route.params.id)
-//   return productsStore.getProductById(id)
-// })
+// جلب المنتج الخام من الستور
+const rawProduct = computed(() => {
+  const id = Number(route.params.id);
+  if (isNaN(id)) return undefined;
+  return productsStore.getProductById(id);
+});
 
-// قمنا بتغيير الاسم ليكون أكثر دقة
-
+// خاصية محسوبة لدمج البيانات واختيار اللغة المناسبة
 const product = computed(() => {
-  const id = Number(route.params.id)
+  if (!rawProduct.value) return undefined;
 
-  if (isNaN(id)) return undefined
-  return productsStore.getProductById(id)
-})
+  const currentLang = locale.value === "ar" ? "ar" : "en";
 
-
-const activeMedia = ref('')
-
-
-watch(product, (newVal) => {
-
-  if (newVal && newVal.gallery && newVal.gallery.length > 0) {
-    activeMedia.value = newVal.gallery[0]
-  } 
-
-  else if (newVal === undefined && !isNaN(Number(route.params.id))) {
-
-    setTimeout(() => {
-       router.push({ name: 'products' })
-    }, 100)
+  // تحضير تسميات المواصفات بناءً على اللغة
+  const localizedSpecsLabels: Record<string, string> = {};
+  if (rawProduct.value.specsLabels) {
+    for (const key in rawProduct.value.specsLabels) {
+      localizedSpecsLabels[key] =
+        rawProduct.value.specsLabels[key][currentLang];
+    }
   }
-}, { immediate: true })
 
+  return {
+    ...rawProduct.value,
+    name: rawProduct.value.name[currentLang],
+    description: rawProduct.value.description[currentLang],
+    fullDescription: rawProduct.value.fullDescription
+      ? rawProduct.value.fullDescription[currentLang]
+      : "",
+    customizationText: rawProduct.value.customizationText[currentLang],
+    videoNotSupported: rawProduct.value.videoNotSupported[currentLang],
+    // تحويل المصفوفات
+    plasticTypes: rawProduct.value.plasticTypes.map((pt) => pt[currentLang]),
+    features: rawProduct.value.features.map((f) => f[currentLang]),
+    // المواصفات وتسمياتها
+    specs: rawProduct.value.specs,
+    specsLabels: localizedSpecsLabels,
+  };
+});
+
+const activeMedia = ref("");
+
+watch(
+  rawProduct,
+  (newVal) => {
+    if (newVal && newVal.gallery && newVal.gallery.length > 0) {
+      activeMedia.value = newVal.gallery[0];
+    } else if (newVal === undefined && !isNaN(Number(route.params.id))) {
+      // إعادة التوجيه إذا لم يتم العثور على المنتج
+      setTimeout(() => {
+        router.push({ name: "products" });
+      }, 100);
+    }
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
-  if (product.value && product.value.gallery) {
-    activeMedia.value = product.value.gallery[0]
+  if (rawProduct.value && rawProduct.value.gallery) {
+    activeMedia.value = rawProduct.value.gallery[0];
   }
-})
+});
 
 const setActiveMedia = (media: string) => {
-  activeMedia.value = media
-}
+  activeMedia.value = media;
+};
 
-// دالة للتحقق مما إذا كان الملف فيديو
 const isVideo = (url: string) => {
-  if (!url) return false
-  const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov']
-  return videoExtensions.some(ext => url.toLowerCase().endsWith(ext))
-}
+  if (!url) return false;
+  const videoExtensions = [".mp4", ".webm", ".ogg", ".mov"];
+  return videoExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+};
 
 const requestQuote = () => {
   if (product.value) {
-    router.push({ 
-      name: 'contact',
-      query: { 
-        subject: `Quote request for ${product.value.name}` 
-      } 
-    })
+    router.push({
+      name: "contact",
+      query: {
+        subject: `Quote request for ${product.value.name}`,
+      },
+    });
   }
-}
-
-// If product not found, redirect to products page
-// if (!product.value) {
-//   router.push({ name: 'products' })
-// }
+};
 </script>
 
 <template>
@@ -84,80 +101,99 @@ const requestQuote = () => {
         <h1 class="page-title" data-aos="fade-up">{{ product.name }}</h1>
       </div>
     </div>
-    
+
     <section class="section product-details-section">
       <div class="container">
         <div class="product-details-grid">
-          
           <div class="product-gallery" data-aos="fade-right">
-            
             <div class="main-image">
-              <video 
-                v-if="isVideo(activeMedia)" 
+              <video
+                v-if="isVideo(activeMedia)"
                 :key="activeMedia"
-                controls 
-                autoplay 
+                controls
+                muted
                 class="media-content"
               >
-                <source :src="activeMedia" type="video/mp4">
-                Your browser does not support the video tag.
+                <source :src="activeMedia" type="video/mp4" />
+                {{ product.videoNotSupported }}
               </video>
-              
-              <img 
-                v-else 
-                :src="activeMedia || product.image" 
-                :alt="product.name" 
+
+              <img
+                v-else
+                :src="activeMedia || product.image"
+                :alt="product.name"
                 class="media-content"
               />
             </div>
-            
+
             <div v-if="product.gallery" class="gallery-thumbs">
-              <div 
-                v-for="(media, index) in product.gallery" 
+              <div
+                v-for="(media, index) in product.gallery"
                 :key="index"
                 class="thumb"
                 :class="{ active: activeMedia === media }"
                 @click="setActiveMedia(media)"
               >
                 <div v-if="isVideo(media)" class="video-thumb-wrapper">
-                   <video :src="media" muted></video>
-                   <div class="play-icon-overlay">
-                     <i class="pi pi-play-circle"></i>
-                   </div>
+                  <video :src="media" muted></video>
+                  <div class="play-icon-overlay">
+                    <i class="pi pi-play-circle"></i>
+                  </div>
                 </div>
 
-                <img v-else :src="media" :alt="`${product.name} - Image ${index + 1}`" />
+                <img
+                  v-else
+                  :src="media"
+                  :alt="`${product.name} - Image ${index + 1}`"
+                />
               </div>
             </div>
           </div>
-          
+
           <div class="product-info" data-aos="fade-left">
-            <p class="product-description">{{ product.fullDescription || product.description }}</p>
-            
+            <p class="product-description">
+              {{ product.fullDescription || product.description }}
+            </p>
+
             <div class="product-features-full">
-              <h3>{{ t('products.featureTitle') }}</h3>
+              <h3>{{ t("products.featureTitle") }}</h3>
               <ul>
                 <li v-for="(feature, index) in product.features" :key="index">
                   <i class="pi pi-check"></i> {{ feature }}
                 </li>
               </ul>
             </div>
-            
-            <div class="product-specs">
-              <h3>{{ t('products.specs') }}</h3>
+
+            <!-- <div class="product-specs">
+              <h3>{{ t("products.specs") }}</h3>
               <div class="specs-grid">
-                <div v-for="(value, key) in product.specs" :key="key" class="spec-item">
-                  <div class="spec-label">{{ key }}</div>
-                  <div class="spec-value">{{ value }}</div>
+                <div
+                  v-for="(label, key) in product.specsLabels"
+                  :key="key"
+                  class="spec-item"
+                >
+                  <div class="spec-label">
+                    {{ product.specs[key] }}
+                  </div>
+                  <div class="spec-value">{{ label }}</div>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="product-specs">
+              <h3>{{ t("products.specs") }}</h3>
+              <div class="specs-grid">
+                <div v-for="label in product.specsLabels" class="spec-item">
+                  <div class="spec-value">{{ label }}</div>
                 </div>
               </div>
             </div>
-            
+
             <div class="product-plastics-full">
-              <h3>{{ t('products.plasticTypes') }}</h3>
+              <h3>{{ t("products.plasticTypes") }}</h3>
               <div class="plastic-tags">
-                <span 
-                  v-for="(type, index) in product.plasticTypes" 
+                <span
+                  v-for="(type, index) in product.plasticTypes"
                   :key="index"
                   class="plastic-tag"
                 >
@@ -165,19 +201,26 @@ const requestQuote = () => {
                 </span>
               </div>
             </div>
-            
+
             <div class="product-customization">
-              <h3>{{ t('products.customization') }}</h3>
-              <p>Our machines can be customized to fit your specific requirements. Contact us for details on customization options including size adjustments, specialized components, and integration with existing systems.</p>
+              <h3>{{ t("products.customization") }}</h3>
+              <p>{{ product.customizationText }}</p>
             </div>
-            
+
             <div class="product-actions">
               <button @click="requestQuote" class="btn btn-primary">
-                {{ t('products.requestQuote') }}
+                {{ t("products.requestQuote") }}
               </button>
-              <router-link :to="{ name: 'products' }" class="btn btn-outline">
-                <i class="pi pi-arrow-left"></i>
-                {{ t('products.title') }}
+
+              <router-link
+                :to="{ name: 'products' }"
+                class="btn btn-outline product-back-btn"
+              >
+                <i
+                  class="pi"
+                  :class="locale === 'ar' ? 'pi-arrow-right' : 'pi-arrow-left'"
+                ></i>
+                <span>{{ t("products.title") }}</span>
               </router-link>
             </div>
           </div>
@@ -198,13 +241,13 @@ const requestQuote = () => {
 }
 
 .page-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg');
+  background-image: url("https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg");
   background-size: cover;
   background-position: center;
   opacity: 0.1;
@@ -233,30 +276,28 @@ const requestQuote = () => {
   gap: var(--space-3);
 }
 
-/* تحديثات العرض الرئيسي */
 .main-image {
   width: 100%;
-  height: 400px;
+  height: 500px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  /*background-color: #000; */ /* خلفية سوداء للفيديو */
-  background: linear-gradient(135deg, #004d20 0%, #00c853 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background-color: #00c853;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--color-gray-200);
 }
 
 .media-content {
   width: 100%;
   height: 100%;
-  /*object-fit: cover;*/
+  object-fit: contain;
   transition: transform var(--transition-slow) ease;
 }
 
-/* تطبيق التكبير فقط على الصور وليس الفيديو */
 img.media-content:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .gallery-thumbs {
@@ -271,19 +312,20 @@ img.media-content:hover {
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
-  transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+  transition: transform var(--transition-normal) ease,
+    box-shadow var(--transition-normal) ease;
   position: relative;
   background-color: #f0f0f0;
+  border: 1px solid var(--color-gray-200);
 }
 
-.thumb img, 
+.thumb img,
 .thumb video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* تنسيقات مصغر الفيديو */
 .video-thumb-wrapper {
   width: 100%;
   height: 100%;
@@ -296,7 +338,7 @@ img.media-content:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -305,16 +347,17 @@ img.media-content:hover {
 .play-icon-overlay i {
   color: white;
   font-size: 1.5rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .thumb:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 .thumb.active {
   box-shadow: 0 0 0 3px var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .product-description {
@@ -346,7 +389,7 @@ img.media-content:hover {
 .product-specs h3::after,
 .product-plastics-full h3::after,
 .product-customization h3::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -453,5 +496,21 @@ img.media-content:hover {
 :deep(.rtl) .product-customization h3::after {
   left: auto;
   right: 0;
+}
+/* أضف هذا الجزء في الستايل */
+.product-actions .btn {
+  display: inline-flex; /* لضمان عمل الفليكس */
+  align-items: center; /* توسيط عمودي */
+  justify-content: center; /* توسيط أفقي */
+  gap: var(--space-2); /* المسافة المطلوبة بين الأيقونة والنص */
+}
+
+/* تحسين حركة السهم عند الوقوف عليه */
+.product-back-btn:hover i {
+  transform: translateX(4px);
+}
+
+:deep(.rtl) .product-back-btn:hover i {
+  transform: translateX(-4px); /* عكس الحركة في العربي */
 }
 </style>

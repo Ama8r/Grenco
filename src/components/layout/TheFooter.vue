@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
+import { useI18n } from "vue-i18n";
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 </script>
 
 <template>
@@ -11,48 +11,81 @@ const currentYear = new Date().getFullYear()
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/src/assets/images/grencoLogo.png" alt="Grenco" class="footer-logo" />
-          <p class="footer-desc">{{ t('footer.description') }}</p>
+          <img src="/assets/grencoLogo.png" alt="Grenco" class="footer-logo" />
+          <p class="footer-desc">{{ t("footer.description") }}</p>
           <div class="social-links">
-            <a href="https://www.linkedin.com/company/grenco" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <a
+              href="https://www.linkedin.com/company/grenco"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
               <i class="pi pi-linkedin"></i>
             </a>
-            <a href="https://www.facebook.com/Grenco.Company" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <a
+              href="https://www.facebook.com/Grenco.Company"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
               <i class="pi pi-facebook"></i>
             </a>
             <!-- <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <i class="pi pi-instagram"></i>
             </a> -->
-            <a href="https://wa.me/201152338718" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <a
+              href="https://wa.me/201152338718"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+            >
               <i class="pi pi-whatsapp"></i>
             </a>
           </div>
         </div>
 
         <div class="footer-links">
-          <h4>{{ t('footer.quickLinks') }}</h4>
+          <h4>{{ t("footer.quickLinks") }}</h4>
           <ul>
-            <li><router-link to="/">{{ t('nav.home') }}</router-link></li>
-            <li><router-link to="/about">{{ t('nav.about') }}</router-link></li>
-            <li><router-link to="/products">{{ t('nav.products') }}</router-link></li>
-            <li><router-link to="/solutions">{{ t('nav.solutions') }}</router-link></li>
+            <li>
+              <router-link to="/">{{ t("nav.home") }}</router-link>
+            </li>
+            <li>
+              <router-link to="/about">{{ t("nav.about") }}</router-link>
+            </li>
+            <li>
+              <router-link to="/products">{{ t("nav.products") }}</router-link>
+            </li>
+            <li>
+              <router-link to="/solutions">{{
+                t("nav.solutions")
+              }}</router-link>
+            </li>
           </ul>
         </div>
 
         <div class="footer-links">
-          <h4>{{ t('footer.support') }}</h4>
+          <h4>{{ t("footer.support") }}</h4>
           <ul>
-            <li><router-link to="/contact">{{ t('nav.contact') }}</router-link></li>
-            <li><a href="#">{{ t('footer.faq') }}</a></li>
-            <li><a href="#">{{ t('footer.privacy') }}</a></li>
-            <li><a href="#">{{ t('footer.terms') }}</a></li>
+            <li>
+              <router-link to="/contact">{{ t("nav.contact") }}</router-link>
+            </li>
+            <li>
+              <a href="/faq">{{ t("footer.faq") }}</a>
+            </li>
+            <li>
+              <a href="/privacy-policy">{{ t("footer.privacy") }}</a>
+            </li>
+            <li>
+              <a href="/terms">{{ t("footer.terms") }}</a>
+            </li>
           </ul>
         </div>
 
         <div class="footer-contact">
-          <h4>{{ t('footer.contactUs') }}</h4>
+          <h4>{{ t("footer.contactUs") }}</h4>
           <address>
-            <p><i class="pi pi-map-marker"></i> {{ t('footer.address') }}</p>
+            <p><i class="pi pi-map-marker"></i> {{ t("footer.address") }}</p>
             <p><i class="pi pi-phone"></i> +20 11 52338718</p>
             <p><i class="pi pi-envelope"></i> info@grenco.org</p>
           </address>
@@ -60,7 +93,7 @@ const currentYear = new Date().getFullYear()
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; {{ currentYear }} Grenco. {{ t('footer.rights') }}</p>
+        <p>&copy; {{ currentYear }} Grenco. {{ t("footer.rights") }}</p>
       </div>
     </div>
   </footer>
@@ -106,7 +139,8 @@ const currentYear = new Date().getFullYear()
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.1);
   color: var(--color-white);
-  transition: background-color var(--transition-normal), transform var(--transition-normal);
+  transition: background-color var(--transition-normal),
+    transform var(--transition-normal);
 }
 
 .social-links a:hover {
@@ -124,7 +158,7 @@ const currentYear = new Date().getFullYear()
 
 .footer-links h4::after,
 .footer-contact h4::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -144,7 +178,8 @@ const currentYear = new Date().getFullYear()
 
 .footer-links a {
   color: var(--color-gray-300);
-  transition: color var(--transition-normal), padding-left var(--transition-normal);
+  transition: color var(--transition-normal),
+    padding-left var(--transition-normal);
   display: inline-block;
 }
 

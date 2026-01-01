@@ -6,21 +6,22 @@ const { t } = useI18n();
 
 const stats = ref([
   {
-    label: t("stats.machines"),
+    // التعديل 1: نستخدم المفتاح بدلاً من النص المترجم مباشرة
+    translationKey: "stats.machines",
     value: 0,
     target: 150,
     icon: "pi-cog",
     suffix: "+",
   },
   {
-    label: t("stats.plasticType"),
+    translationKey: "stats.plasticType",
     value: 0,
     target: 5,
     icon: "pi-filter",
     suffix: "",
   },
   {
-    label: t("stats.customers"),
+    translationKey: "stats.customers",
     value: 0,
     target: 75,
     icon: "pi-users",
@@ -56,7 +57,7 @@ onMounted(() => {
 <template>
   <section class="stats-section">
     <div class="stats-background"></div>
-    
+
     <div class="container">
       <div class="stats-grid" data-aos="fade-up">
         <div
@@ -72,7 +73,7 @@ onMounted(() => {
             <span class="counter">{{ stat.value }}</span>
             <span class="suffix">{{ stat.suffix }}</span>
           </div>
-          <div class="stat-label">{{ stat.label }}</div>
+          <div class="stat-label">{{ t(stat.translationKey) }}</div>
         </div>
       </div>
     </div>
@@ -84,13 +85,11 @@ onMounted(() => {
   padding: var(--space-6) 0;
   background-color: var(--color-primary);
   color: var(--color-white);
-  /* تصحيح: position: center غير موجودة في CSS، نستخدم relative للتحكم في العناصر المطلقة داخله */
-  position: relative; 
+  position: relative;
   overflow: hidden;
-  z-index: 1; /* لضمان ظهور المحتوى فوق الخلفية */
+  z-index: 1;
 }
 
-/* تنسيق الخلفية الشفافة */
 .stats-background {
   position: absolute;
   top: 0;
@@ -100,16 +99,15 @@ onMounted(() => {
   background-image: url("https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg");
   background-size: cover;
   background-position: center;
-  opacity: 0.15; /* يمكنك زيادة أو تقليل هذا الرقم للتحكم في شفافية الصورة */
-  z-index: -1; /* جعل الصورة خلف النصوص */
+  opacity: 0.15;
+  z-index: -1;
 }
 
 .stats-grid {
-  /* التعديل هنا: استخدام Flexbox لتوسيط العناصر في المنتصف */
   display: flex;
-  justify-content: center; /* توسيط أفقي */
-  align-items: center;     /* توسيط عمودي (إذا لزم الأمر) */
-  flex-wrap: wrap;        /* السماح بنزول العناصر للسطر التالي في الشاشات الصغيرة */
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-4);
 }
 
@@ -119,9 +117,7 @@ onMounted(() => {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   transition: transform var(--transition-normal) ease;
-  
-  /* تحديد عرض ثابت أو مرن لضمان التناسق */
-  flex: 0 1 250px; /* Base width 250px */
+  flex: 0 1 250px;
   min-width: 200px;
 }
 

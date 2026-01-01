@@ -1,110 +1,115 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 const company = ref({
   founded: 2024,
   employees: 15,
-  machines: 150
+  machines: 150,
   //countries: 10
-})
+});
 
-const team = ref([
-  {
-    name: "Rabeh Yaser",
-    position: "CEO & Founder",
-    image: "https://iili.io/fuHwCkQ.md.jpg",
-    link: "https://www.linkedin.com/in/rabeh-yaser/"
-  },
-  {
-    name: "Ammar Abd Elbari",
-    position: "CTO",
-    image: "https://iili.io/fTmWRlS.md.jpg",
-    link: "https://www.linkedin.com/in/ama8r/"
-  },
-  {
-    name: "Mahmoud Hussin",
-    position: "DevOps Developer",
-    image: "https://iili.io/fuHwcpp.md.png",
-    link: "https://www.linkedin.com/in/mahmoud-hussein37/"
-  },
-  {
-    name: "Aliaa Ahmed",
-    position: "Data Analyst",
-    image: "https://iili.io/fuHjZ1s.md.jpg",
-    link: "https://www.linkedin.com/in/aliaa-ahmed-zaki-918873274/"
-  },
-  {
-    name: "Yasmen Essam",
-    position: "HR Manager",
-    image: "https://iili.io/fuHwEQt.md.jpg",
-    link: "https://www.linkedin.com/in/yasmeen-essam-212308323/"
-  },
-  {
-    name: "Salma Mostafa",
-    position: "CAD Engineer",
-    image: "https://iili.io/fuHwIQ1.md.jpg",
-    link: "https://www.linkedin.com/in/salma-mostafa2001/"
-  },
-  {
-    name: "Magda Atef",
-    position: "Public Relations",
-    image: "https://iili.io/fuHjm74.md.jpg",
-    link : "https://www.linkedin.com/in/magda-atef-277158249/"
-  },
-  {
-    name: "Ahmed Farrag",
-    position: "Application Developer",
-    image: "https://iili.io/fuHjQBn.md.jpg",
-    link : "https://www.linkedin.com/in/ahmedfarragtantawy/"
-  }
-  
-].filter(member => member && member.name && member.position && member.image))
+const team = ref(
+  [
+    {
+      name: "Rabeh Yaser",
+      position: "CEO & Founder",
+      image: "https://iili.io/fuHwCkQ.md.jpg",
+      link: "https://www.linkedin.com/in/rabeh-yaser/",
+    },
+    {
+      name: "Ammar Abd Elbari",
+      position: "CTO",
+      image: "https://iili.io/fTmWRlS.md.jpg",
+      link: "https://www.linkedin.com/in/ama8r/",
+    },
+    {
+      name: "Mahmoud Hussin",
+      position: "DevOps Developer",
+      image: "https://iili.io/fuHwcpp.md.png",
+      link: "https://www.linkedin.com/in/mahmoud-hussein37/",
+    },
+    {
+      name: "Ahmed Farrag",
+      position: "Application Developer",
+      image: "https://iili.io/fuHjQBn.md.jpg",
+      link: "https://www.linkedin.com/in/ahmedfarragtantawy/",
+    },
+    {
+      name: "Aliaa Ahmed",
+      position: "Data Analyst",
+      image: "/assets/images/Team/Aliaa.jpg",
+      link: "https://www.linkedin.com/in/aliaa-ahmed-zaki-918873274/",
+    },
+    {
+      name: "Yasmen Essam",
+      position: "HR Manager",
+      image: "https://iili.io/fuHwEQt.md.jpg",
+      link: "https://www.linkedin.com/in/yasmeen-essam-212308323/",
+    },
+    {
+      name: "Salma Mostafa",
+      position: "CAD Engineer",
+      image: "https://iili.io/fuHwIQ1.md.jpg",
+      link: "https://www.linkedin.com/in/salma-mostafa2001/",
+    },
+    {
+      name: "Magda Atef",
+      position: "Public Relations",
+      image: "https://iili.io/fuHjm74.md.jpg",
+      link: "https://www.linkedin.com/in/magda-atef-277158249/",
+    },
+  ].filter((member) => member && member.name && member.position && member.image)
+);
 
 const values = ref([
   {
-    title: t('about.values.sustainability'),
-    icon: 'pi-globe',
-    description: 'We are committed to environmental sustainability and reducing plastic waste through innovative recycling solutions.'
+    title: t("about.values.sustainability"),
+    icon: "pi-globe",
+    description:
+      "We are committed to environmental sustainability and reducing plastic waste through innovative recycling solutions.",
   },
   {
-    title: t('about.values.innovation'),
-    icon: 'pi-bolt',
-    description: 'We continually innovate our recycling technology to improve efficiency and adapt to new challenges.'
+    title: t("about.values.innovation"),
+    icon: "pi-bolt",
+    description:
+      "We continually innovate our recycling technology to improve efficiency and adapt to new challenges.",
   },
   {
-    title: t('about.values.quality'),
-    icon: 'pi-check-circle',
-    description: 'We maintain the highest standards of quality in our machines and customer service.'
+    title: t("about.values.quality"),
+    icon: "pi-check-circle",
+    description:
+      "We maintain the highest standards of quality in our machines and customer service.",
   },
   {
-    title: t('about.values.integrity'),
-    icon: 'pi-shield',
-    description: 'We operate with transparency, honesty, and ethical business practices in all our relationships.'
-  }
-])
+    title: t("about.values.integrity"),
+    icon: "pi-shield",
+    description:
+      "We operate with transparency, honesty, and ethical business practices in all our relationships.",
+  },
+]);
 </script>
 
 <template>
   <div class="about-page">
     <div class="page-header">
       <div class="container">
-        <h1 class="page-title" data-aos="fade-up">{{ t('about.title') }}</h1>
+        <h1 class="page-title" data-aos="fade-up">{{ t("about.title") }}</h1>
       </div>
     </div>
-    
+
     <section class="section about-mission">
       <div class="container">
         <div class="mission-grid">
           <div class="mission-content" data-aos="fade-right">
-            <h2>{{ t('about.mission.title') }}</h2>
-            <p class="mission-text">{{ t('about.mission.content') }}</p>
-            
-            <h2 class="mt-5">{{ t('about.vision.title') }}</h2>
-            <p class="mission-text">{{ t('about.vision.content') }}</p>
-            
+            <h2>{{ t("about.mission.title") }}</h2>
+            <p class="mission-text">{{ t("about.mission.content") }}</p>
+
+            <h2 class="mt-5">{{ t("about.vision.title") }}</h2>
+            <p class="mission-text">{{ t("about.vision.content") }}</p>
+
             <div class="company-stats">
               <div class="stat-item">
                 <div class="stat-value">{{ company.founded }}</div>
@@ -120,21 +125,27 @@ const values = ref([
               </div>
             </div>
           </div>
-          
+
           <div class="mission-image" data-aos="fade-left">
-            <img src="https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg" alt="Grenco mission" class="image-rounded" />
+            <img
+              src="https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg"
+              alt="Grenco mission"
+              class="image-rounded"
+            />
           </div>
         </div>
       </div>
     </section>
-    
+
     <section class="section values-section">
       <div class="container">
-        <h2 class="section-title" data-aos="fade-up">{{ t('about.values.title') }}</h2>
-        
+        <h2 class="section-title" data-aos="fade-up">
+          {{ t("about.values.title") }}
+        </h2>
+
         <div class="values-grid">
-          <div 
-            v-for="(value, index) in values" 
+          <div
+            v-for="(value, index) in values"
             :key="index"
             class="value-card"
             data-aos="fade-up"
@@ -149,16 +160,16 @@ const values = ref([
         </div>
       </div>
     </section>
-    
+
     <section class="section team-section">
       <div class="container">
         <h2 class="section-title" data-aos="fade-up">Our Team</h2>
-        
+
         <div class="team-grid">
-          <a 
-            v-for="(member, index) in team" 
+          <a
+            v-for="(member, index) in team"
             :key="index"
-            :href="member.link" 
+            :href="member.link"
             target="_blank"
             class="team-card"
             data-aos="fade-up"
@@ -189,13 +200,13 @@ const values = ref([
 }
 
 .page-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg');
+  background-image: url("https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg");
   background-size: cover;
   background-position: center;
   opacity: 0.1;
@@ -268,7 +279,8 @@ const values = ref([
 .mission-image {
   overflow: hidden;
   border-radius: var(--radius-lg);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .image-rounded {
@@ -297,14 +309,14 @@ const values = ref([
   background-color: var(--color-white);
   padding: var(--space-4);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform var(--transition-normal) ease;
   text-align: center;
 }
 
 .value-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
 }
 
 .value-icon {
@@ -345,12 +357,11 @@ const values = ref([
   gap: var(--space-4);
 }
 
-
 .team-card {
   background-color: var(--color-white);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform var(--transition-normal) ease;
   display: block;
   text-decoration: none;
@@ -360,7 +371,7 @@ const values = ref([
 
 .team-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
 }
 
 .team-image {
@@ -370,13 +381,13 @@ const values = ref([
 }
 
 .team-image::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 30%;
-  background: linear-gradient(to top, rgba(0, 200, 83, 0.8), transparent);
+  background: linear-gradient(to top, #205414, transparent);
 }
 
 .team-image img {
@@ -416,7 +427,7 @@ const values = ref([
   .mission-grid {
     grid-template-columns: 3fr 2fr;
   }
-  
+
   .values-grid {
     grid-template-columns: repeat(4, 1fr);
   }

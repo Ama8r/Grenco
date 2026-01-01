@@ -1,43 +1,20 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from 'vue-router';
-import { useSolutionsStore } from '../stores/solutions'; // استيراد الـ store
+import { useRouter } from "vue-router";
+import { useSolutionsStore } from "../stores/solutions";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const router = useRouter();
 const solutionsStore = useSolutionsStore();
 
-// جلب البيانات من الـ Store
 const solutions = computed(() => solutionsStore.solutions);
 
-const features = [
-  // ... (نفس الـ features القديمة يمكن إبقاؤها هنا أو نقلها للستور أيضاً)
-  {
-    icon: "pi-cog",
-    title: "Customizable Solutions",
-    description: "Tailor our machines to your specific needs and requirements",
-  },
-  {
-    icon: "pi-mobile",
-    title: "Smart Controls",
-    description: "Monitor and control your recycling operations from anywhere",
-  },
-  {
-    icon: "pi-chart-line",
-    title: "Data Analytics",
-    description: "Make informed decisions with real-time performance data",
-  },
-  {
-    icon: "pi-users",
-    title: "Expert Support",
-    description: "24/7 technical support and maintenance services",
-  },
-];
+// ... (يمكنك إبقاء Features computed logic إذا كنت تستخدمها في قسم آخر) ...
 
 const viewSolution = (id: number) => {
-  router.push({ name: 'solution-details', params: { id } });
-}
+  router.push({ name: "solution-details", params: { id } });
+};
 </script>
 
 <template>
@@ -64,31 +41,41 @@ const viewSolution = (id: number) => {
             :data-aos-delay="solution.id * 100"
           >
             <div class="solution-image">
-              <img :src="solution.image" :alt="t(`solutions.${solution.translationKey}.title`)" />
+              <img
+                :src="solution.image"
+                :alt="t(`solutions.${solution.translationKey}.title`)"
+              />
               <div class="solution-icon">
                 <i :class="`pi ${solution.icon}`"></i>
               </div>
             </div>
 
             <div class="solution-content">
-              <h2 class="solution-title">{{ t(`solutions.${solution.translationKey}.title`) }}</h2>
-              <p class="solution-description">{{ t(`solutions.${solution.translationKey}.content`) }}</p>
+              <h2 class="solution-title">
+                {{ t(`solutions.${solution.translationKey}.title`) }}
+              </h2>
+              <p class="solution-description line-clamp-3">
+                {{ t(`solutions.${solution.translationKey}.content`) }}
+              </p>
 
               <div class="benefits-list">
-                <h3>Key Benefits:</h3>
+                <h3>{{ t("solutionsPage.keyBenefits") }}</h3>
                 <ul>
                   <li
                     v-for="(benefit, index) in solution.benefits.slice(0, 2)"
                     :key="index"
                   >
                     <i class="pi pi-check"></i>
-                    <span>{{ benefit }}</span>
+                    <span>{{ locale === "ar" ? benefit.ar : benefit.en }}</span>
                   </li>
                 </ul>
               </div>
-              
-              <button @click="viewSolution(solution.id)" class="btn btn-outline full-width">
-                Learn More
+
+              <button
+                @click="viewSolution(solution.id)"
+                class="btn btn-outline full-width"
+              >
+                {{ t("solutionsPage.learnMore") }}
               </button>
             </div>
           </div>
@@ -96,38 +83,11 @@ const viewSolution = (id: number) => {
       </div>
     </section>
 
-    <section class="section features-section">
-        <div class="container">
-        <h2 class="section-title" data-aos="fade-up">
-          Why Choose Our Solutions?
-        </h2>
-
-        <div class="features-grid">
-          <div
-            v-for="(feature, index) in features"
-            :key="index"
-            class="feature-card"
-            data-aos="fade-up"
-            :data-aos-delay="index * 100"
-          >
-            <div class="feature-icon">
-              <i :class="`pi ${feature.icon}`"></i>
-            </div>
-            <h3 class="feature-title">{{ feature.title }}</h3>
-            <p class="feature-description">{{ feature.description }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section cta-section">
-        <div class="container">
+      <div class="container">
         <div class="cta-content" data-aos="fade-up">
-          <h2>Ready to Transform Your Recycling Process?</h2>
-          <p>
-            Contact us today to discuss your specific requirements and find the
-            perfect solution.
-          </p>
+          <h2>{{ t("solutionsPage.ctaTitle") }}</h2>
+          <p>{{ t("solutionsPage.ctaText") }}</p>
           <router-link to="/contact" class="btn btn-primary">
             {{ t("hero.contactUs") }}
             <i class="pi pi-arrow-right"></i>
@@ -139,14 +99,21 @@ const viewSolution = (id: number) => {
 </template>
 
 <style scoped>
-/* نفس الستايلات القديمة مع إضافة كلاس للزر */
+/* إضافة كلاس لقص النص */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .full-width {
   width: 100%;
   margin-top: var(--space-3);
   cursor: pointer;
 }
 
-/* ... باقي الستايلات من ملفك الأصلي ... */
 .page-header {
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -211,7 +178,7 @@ const viewSolution = (id: number) => {
 }
 
 .solution-image {
-  height: 300px;
+  height: 250px;
   position: relative;
   overflow: hidden;
 }
@@ -251,9 +218,10 @@ const viewSolution = (id: number) => {
 }
 
 .solution-title {
-  font-size: var(--font-size-2xl);
+  font-size: 1.5rem;
   margin-bottom: var(--space-2);
   color: var(--color-secondary);
+  line-height: 1.3;
 }
 
 .solution-description {
@@ -263,13 +231,15 @@ const viewSolution = (id: number) => {
 }
 
 .benefits-list {
-  flex-grow: 1; /* لدفع الزر للأسفل */
+  flex-grow: 1;
+  margin-bottom: var(--space-3);
 }
 
 .benefits-list h3 {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   margin-bottom: var(--space-2);
   color: var(--color-secondary);
+  font-weight: 700;
 }
 
 .benefits-list ul {
@@ -280,60 +250,14 @@ const viewSolution = (id: number) => {
 .benefits-list li {
   display: flex;
   align-items: center;
+  gap: var(--space-2);
   margin-bottom: var(--space-2);
   color: var(--color-gray-700);
+  font-size: 0.9rem;
 }
 
 .benefits-list li i {
   color: var(--color-primary);
-  margin-right: var(--space-2);
-}
-
-.features-section {
-  padding: var(--space-7) 0;
-  background-color: var(--color-gray-100);
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
-  margin-top: var(--space-5);
-}
-
-.feature-card {
-  background-color: var(--color-white);
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
-  text-align: center;
-  transition: transform var(--transition-normal) ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-}
-
-.feature-icon {
-  width: 60px;
-  height: 60px;
-  background-color: var(--color-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto var(--space-3);
-  color: var(--color-white);
-  font-size: 1.5rem;
-}
-
-.feature-title {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--space-2);
-  color: var(--color-secondary);
-}
-
-.feature-description {
-  color: var(--color-gray-600);
 }
 
 .cta-section {
@@ -364,6 +288,10 @@ const viewSolution = (id: number) => {
   padding: 0.75rem 2rem;
   background-color: var(--color-white);
   color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
 }
 
 .cta-content .btn:hover {
@@ -374,25 +302,12 @@ const viewSolution = (id: number) => {
   .solutions-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (min-width: 1024px) {
   .solutions-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-
-  .features-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-:deep(.rtl) .benefits-list li i {
-  margin-right: 0;
-  margin-left: var(--space-2);
 }
 
 :deep(.rtl) .solution-icon {

@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
-const { t } = useI18n()
-const router = useRouter()
+const { t } = useI18n();
+const router = useRouter();
 
 const navigateToContact = () => {
-  router.push({ name: 'contact' })
-}
+  router.push({ name: "contact" });
+};
 </script>
 
 <template>
   <section class="contact-cta-section" data-aos="fade-up">
     <div class="container">
       <div class="cta-content">
-        <h2 class="cta-title">{{ t('contact.title') }}</h2>
-        <p class="cta-subtitle">{{ t('contact.subtitle') }}</p>
+        <h2 class="cta-title">{{ t("contact.title") }}</h2>
+        <p class="cta-subtitle">{{ t("contact.subtitle") }}</p>
+
         <button @click="navigateToContact" class="btn btn-primary cta-button">
-          {{ t('hero.contactUs') }}
+          <span>{{ t("hero.contactUs") }}</span>
           <i class="pi pi-arrow-right"></i>
         </button>
       </div>
@@ -35,13 +36,13 @@ const navigateToContact = () => {
 }
 
 .contact-cta-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg');
+  background-image: url("https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg");
   background-size: cover;
   background-position: center;
   opacity: 0.1;
@@ -72,10 +73,35 @@ const navigateToContact = () => {
   color: var(--color-primary);
   font-size: var(--font-size-lg);
   padding: 0.75rem 2rem;
+
+  /* --- الإضافات الجديدة للهندلة --- */
+  display: inline-flex; /* استخدام الفليكس لضبط العناصر */
+  align-items: center; /* توسيط عمودي */
+  justify-content: center; /* توسيط أفقي */
+  gap: var(--space-2); /* مسافة ثابتة بين النص والأيقونة */
+  transition: all var(--transition-normal); /* نعومة في الحركة */
 }
 
 .cta-button:hover {
   background-color: var(--color-gray-100);
   color: var(--color-primary-dark);
+}
+
+/* تحريك السهم قليلاً عند الوقوف على الزر */
+.cta-button:hover i {
+  transform: translateX(4px);
+  transition: transform var(--transition-normal);
+}
+
+/* --- تنسيقات اللغة العربية (RTL) --- */
+
+/* قلب السهم لليسار في حالة اللغة العربية */
+:deep(.rtl) .cta-button i {
+  transform: scaleX(-1);
+}
+
+/* المحافظة على اتجاه القلب مع الحركة عند الوقوف عليه في العربي */
+:deep(.rtl) .cta-button:hover i {
+  transform: scaleX(-1) translateX(4px);
 }
 </style>
