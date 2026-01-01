@@ -194,7 +194,7 @@ const requestQuote = (id: number) => {
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* عرض الصورة بالكامل دون قص */
+  object-fit: cover; /* عرض الصورة بالكامل دون قص */
   transition: transform var(--transition-slow) ease;
 }
 

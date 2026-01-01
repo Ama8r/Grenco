@@ -22,7 +22,6 @@ interface ContactResponse {
   errors?: Record<string, string[]>;
 }
 
-// 1. قمنا بإضافة locale هنا
 const { t, locale } = useI18n();
 const productsStore = useProductsStore();
 const solutionsStore = useSolutionsStore();
@@ -103,13 +102,12 @@ const setServiceType = (type: string) => {
   form.specificService = [];
 };
 
-// 2. تعديل هذه الخاصية المحسوبة للتعامل مع تعدد اللغات في أسماء المنتجات
 const availableOptions = computed(() => {
   if (form.serviceType === "product") {
     const currentLang = locale.value === "ar" ? "ar" : "en";
     return productsStore.products.map((p) => ({
       id: p.id,
-      name: p.name[currentLang], // اختيار الاسم بناءً على اللغة الحالية
+      name: p.name[currentLang],
     }));
   } else if (form.serviceType === "solution") {
     return solutionsStore.solutions.map((s) => ({
@@ -126,18 +124,19 @@ const validateForm = () => {
     (key) => (errors[key as keyof typeof errors] = "")
   );
 
-  if (!form.name.trim()) errors.name = "Name is required";
-  if (!form.email.trim()) errors.email = "Email is required";
+  if (!form.name.trim()) errors.name = t("contact.errors.required");
+  if (!form.email.trim()) errors.email = t("contact.errors.required");
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-    errors.email = "Invalid email";
+    errors.email = t("contact.errors.invalidEmail");
 
-  if (form.phone && !/^\d+$/.test(form.phone)) errors.phone = "Numbers only";
+  if (form.phone && !/^\d+$/.test(form.phone))
+    errors.phone = t("contact.errors.numbersOnly");
 
   if (form.specificService.length === 0)
-    errors.specificService = "Please select at least one item";
+    errors.specificService = t("contact.errors.selectOne");
 
-  if (!form.subject.trim()) errors.subject = "Subject is required";
-  if (!form.message.trim()) errors.message = "Message is required";
+  if (!form.subject.trim()) errors.subject = t("contact.errors.required");
+  if (!form.message.trim()) errors.message = t("contact.errors.required");
 
   return (
     isValid &&
@@ -216,7 +215,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="contact-page">
+  <div class="contact-page" :dir="locale === 'ar' ? 'rtl' : 'ltr'">
     <div class="page-header">
       <div class="container">
         <h1 class="page-title" data-aos="fade-up">{{ t("contact.title") }}</h1>
@@ -266,7 +265,7 @@ const handleSubmit = async () => {
 
               <div class="form-group">
                 <label for="phone">{{ t("contact.phone") }}</label>
-                <div class="phone-input-wrapper">
+                <div class="phone-input-wrapper" dir="ltr">
                   <div
                     class="custom-country-select"
                     :class="{ open: isCountryDropdownOpen }"
@@ -280,6 +279,9 @@ const handleSubmit = async () => {
                         :alt="selectedCountry.name"
                         class="country-flag"
                       />
+                      <span class="country-name-display">{{
+                        selectedCountry.name
+                      }}</span>
                       <span class="country-code">{{
                         selectedCountry.code
                       }}</span>
@@ -347,10 +349,13 @@ const handleSubmit = async () => {
                 <label>
                   {{
                     form.serviceType === "product"
-                      ? "Select Products"
-                      : "Select Solutions"
+                      ? t("contact.selectProducts")
+                      : t("contact.selectSolutions")
                   }}
-                  <span class="optional-text">(You can select multiple)</span> *
+                  <span class="optional-text"
+                    >({{ t("contact.multipleSelection") }})</span
+                  >
+                  *
                 </label>
 
                 <div class="options-grid">
@@ -410,7 +415,8 @@ const handleSubmit = async () => {
                 :disabled="isLoading"
               >
                 <span v-if="isLoading"
-                  ><i class="pi pi-spin pi-spinner"></i> Sending...</span
+                  ><i class="pi pi-spin pi-spinner"></i>
+                  {{ t("contact.sending") }}...</span
                 >
                 <span v-else
                   >{{ t("contact.submit") }} <i class="pi pi-send"></i
@@ -475,10 +481,12 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-/* --- تصميم شبكة الاختيارات (Options Grid Style) --- */
+/* --- Styles --- */
+
 .options-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  /* تحسين: استخدام auto-fill بدقة أكثر لضمان المرونة */
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px;
   margin-top: 5px;
 }
@@ -503,7 +511,7 @@ const handleSubmit = async () => {
 }
 
 .option-card.active {
-  background-color: rgba(0, 200, 83, 0.08); /* لون أخضر فاتح جداً */
+  background-color: rgba(0, 200, 83, 0.08);
   border-color: var(--color-primary);
   box-shadow: 0 2px 8px rgba(0, 200, 83, 0.2);
 }
@@ -552,15 +560,11 @@ const handleSubmit = async () => {
   margin-left: 5px;
 }
 
-/* RTL Adjustment for Grid */
-:deep(.rtl) .checkbox-indicator {
+.contact-page[dir="rtl"] .checkbox-indicator {
   margin-right: 0;
   margin-left: 12px;
 }
 
-/* --- (باقي الستايلات السابقة كما هي) --- */
-
-/* تصميم زر التبديل (Toggle Switch) */
 .service-toggle-container {
   display: flex;
   position: relative;
@@ -583,10 +587,12 @@ const handleSubmit = async () => {
   color: var(--color-gray-600);
   transition: color 0.3s ease;
   border-radius: var(--radius-full);
+  font-size: 1rem;
 }
 .toggle-option.active {
   color: var(--color-white);
 }
+
 .toggle-slider {
   position: absolute;
   top: 5px;
@@ -602,15 +608,15 @@ const handleSubmit = async () => {
 .toggle-slider.slide-right {
   transform: translateX(100%);
 }
-:deep(.rtl) .toggle-slider {
-  right: 5px;
+
+.contact-page[dir="rtl"] .toggle-slider {
   left: auto;
+  right: 5px;
 }
-:deep(.rtl) .toggle-slider.slide-right {
+.contact-page[dir="rtl"] .toggle-slider.slide-right {
   transform: translateX(-100%);
 }
 
-/* تصميم قائمة الدول */
 .phone-input-wrapper {
   display: flex;
   gap: 10px;
@@ -618,7 +624,7 @@ const handleSubmit = async () => {
 }
 .custom-country-select {
   position: relative;
-  width: 140px;
+  min-width: 140px;
   flex-shrink: 0;
   background-color: var(--color-gray-100);
   border: 1px solid var(--color-gray-300);
@@ -635,17 +641,27 @@ const handleSubmit = async () => {
   justify-content: space-between;
   padding: var(--space-3);
   height: 100%;
+  gap: 5px;
 }
 .country-flag {
   width: 24px;
   height: auto;
   border-radius: 2px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+.country-name-display {
+  display: none;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .country-code {
   font-weight: 600;
   color: var(--color-secondary);
   font-size: 0.9rem;
+  direction: ltr;
 }
 .dropdown-arrow {
   font-size: 0.8rem;
@@ -659,7 +675,8 @@ const handleSubmit = async () => {
   position: absolute;
   top: 110%;
   left: 0;
-  width: 250px;
+  width: 280px;
+  max-width: 90vw;
   max-height: 250px;
   overflow-y: auto;
   background-color: white;
@@ -708,11 +725,14 @@ const handleSubmit = async () => {
 }
 .phone-input-wrapper input {
   flex: 1;
+  width: 100%;
+  min-width: 0;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-gray-300);
   background-color: var(--color-gray-100);
   padding: var(--space-3);
   transition: all 0.3s;
+  font-size: 1rem;
 }
 .phone-input-wrapper input:focus {
   outline: none;
@@ -721,7 +741,6 @@ const handleSubmit = async () => {
   box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.1);
 }
 
-/* General Form Styles */
 .contact-form {
   background-color: var(--color-white);
   padding: var(--space-5);
@@ -766,21 +785,23 @@ const handleSubmit = async () => {
   gap: 10px;
   margin-top: 10px;
 }
+
+/* --- تعديل الأنيميشن لمنع الخروج عن الشاشة --- */
 .fade-in {
-  animation: fadeIn 0.4s ease;
+  /* تم إزالة transform:translateY لمنع مشاكل التخطيط */
+  animation: fadeIn 0.4s ease-in-out;
 }
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    /* transform: translateY(5px); <-- تم إيقاف هذا السطر */
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    /* transform: translateY(0); */
   }
 }
 
-/* Base Styles */
 .page-header {
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -804,10 +825,13 @@ const handleSubmit = async () => {
 .contact-section {
   padding: var(--space-6) 0;
   background-color: var(--color-gray-50);
+  /* مهم جداً: يمنع أي عناصر فرعية من الخروج أفقياً */
+  overflow-x: hidden;
 }
 .contact-grid {
   display: grid;
   gap: var(--space-5);
+  grid-template-columns: 1fr;
 }
 .contact-info {
   display: flex;
@@ -857,6 +881,11 @@ const handleSubmit = async () => {
   overflow: hidden;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 }
+.map-container iframe {
+  width: 100% !important;
+  display: block;
+}
+
 .error-message {
   color: var(--color-error);
   font-size: 0.85rem;
@@ -880,6 +909,11 @@ const handleSubmit = async () => {
   border: 1px solid var(--color-error);
 }
 
+/* =================================
+   Responsive Styles (All Screens)
+   ================================= */
+
+/* Desktop (Standard) */
 @media (min-width: 1024px) {
   .contact-grid {
     grid-template-columns: 1.5fr 1fr;
@@ -887,6 +921,74 @@ const handleSubmit = async () => {
   .map-container {
     height: 100%;
     min-height: 400px;
+  }
+  .country-name-display {
+    display: inline-block;
+  }
+}
+
+/* Large Screens (XL) */
+@media (min-width: 1440px) {
+  .contact-section {
+    padding: var(--space-7) 0;
+  }
+  .contact-form {
+    padding: var(--space-6); /* زيادة البادينج للشاشات الكبيرة */
+  }
+  .form-group input:not([type="tel"]),
+  .form-group textarea {
+    padding: 15px; /* تكبير حقول الإدخال */
+    font-size: 1.05rem;
+  }
+  .options-grid {
+    /* عرض 3 أعمدة أو أكثر للشاشات العريضة جداً */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+/* Tablet & Mobile */
+@media (max-width: 768px) {
+  .page-header {
+    padding: var(--space-6) 0 var(--space-4);
+  }
+  .page-title {
+    font-size: 2rem;
+  }
+  .contact-section {
+    padding: var(--space-4) 0;
+  }
+  .contact-form {
+    padding: var(--space-4);
+  }
+  .map-container {
+    height: 250px;
+  }
+  .toggle-option {
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .custom-country-select {
+    min-width: 100px;
+    width: 100px;
+  }
+  .country-name-display {
+    display: none;
+  }
+  .phone-input-wrapper {
+    gap: 5px;
+  }
+  .options-grid {
+    grid-template-columns: 1fr; /* عمود واحد في الشاشات الضيقة جداً */
+  }
+  .toggle-option {
+    font-size: 0.85rem;
+    gap: 4px;
+  }
+  .service-toggle-container {
+    height: 50px;
   }
 }
 </style>

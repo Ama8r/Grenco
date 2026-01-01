@@ -31,9 +31,31 @@
     "values": {
       "title": "Our Values",
       "sustainability": "Sustainability",
+      "sustainabilityDesc": "We are committed to environmental sustainability and reducing plastic waste through innovative recycling solutions.",
       "innovation": "Innovation",
+      "innovationDesc": "We continually innovate our recycling technology to improve efficiency and adapt to new challenges.",
       "quality": "Quality",
-      "integrity": "Integrity"
+      "qualityDesc": "We maintain the highest standards of quality in our machines and customer service.",
+      "integrity": "Integrity",
+      "integrityDesc": "We operate with transparency, honesty, and ethical business practices in all our relationships."
+    },
+    "stats": {
+      "founded": "Founded",
+      "employees": "Employees",
+      "machines": "Machines"
+    },
+    "team": {
+      "title": "Our Team",
+      "roles": {
+        "ceo": "CEO & Founder",
+        "cto": "CTO",
+        "devops": "DevOps Developer",
+        "appDev": "Application Developer",
+        "dataAnalyst": "Data Analyst",
+        "hr": "HR Manager",
+        "cad": "CAD Engineer",
+        "pr": "Public Relations"
+      }
     }
   },
   "products": {
@@ -75,7 +97,11 @@
     "success": "Your message has been sent! We'll respond soon.",
     "error": "There was an error. Please try again.",
     "office": "Our Office",
-    "followUs": "Follow Us"
+    "followUs": "Follow Us",
+    "interest": "I am interested in:",
+    "selectProducts": "Select Products",
+    "selectSolutions": "Select Services",
+    "multipleSelection": "You can select multiple products"
   },
   "footer": {
     "description": "Grenco provides smart plastic recycling solutions for businesses seeking to reduce costs and environmental impact.",
@@ -133,6 +159,6 @@
     "whyMatters": "Why this matters?",
     "whyMattersContent": "Implementing this solution directly impacts your operational efficiency and long-term sustainability goals. Our technology ensures seamless integration with your existing workflow.",
     "keyAdvantages": "Key Advantages",
-    "requestConsultation": "Request Consultation"
+    "requestConsultation": "Request Service"
   }
 }

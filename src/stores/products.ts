@@ -44,7 +44,7 @@ export const useProductsStore = defineStore("products", () => {
       },
       fullDescription: {
         en: "Grenco delivers high-quality screws and barrels engineered for superior performance in injection molding, extrusion, and recycling applications. Each unit is manufactured from premium alloy steel and undergoes advanced heat-treatment processes to ensure maximum strength and stability during continuous operation. With full customization available for all dimensions and specifications, the company provides tailored solutions that enhance production efficiency and deliver long-term reliability across industrial environments.",
-        ar: "تقدم جرينكو براغي (فتيل) وسبائك (شميز) عالية الجودة مصممة لأداء فائق في تطبيقات الحقن والبثق وإعادة التدوير. يتم تصنيع كل وحدة من سبائك الصلب الممتازة وتخضع لعمليات معالجة حرارية متقدمة لضمان أقصى قدر من القوة والاستقرار أثناء التشغيل المستمر. مع توفر التخصيص الكامل لجميع الأبعاد والمواصفات، توفر الشركة حلولاً مصممة خصيصًا تعزز كفاءة الإنتاج وتوفر موثوقية طويلة الأمد في البيئات الصناعية.",
+        ar: "تقدم جرينكوا براغي (فتيل) وسبائك (شميز) عالية الجودة مصممة لأداء فائق في تطبيقات الحقن والبثق وإعادة التدوير. يتم تصنيع كل وحدة من سبائك الصلب الممتازة وتخضع لعمليات معالجة حرارية متقدمة لضمان أقصى قدر من القوة والاستقرار أثناء التشغيل المستمر. مع توفر التخصيص الكامل لجميع الأبعاد والمواصفات، توفر الشركة حلولاً مصممة خصيصًا تعزز كفاءة الإنتاج وتوفر موثوقية طويلة الأمد في البيئات الصناعية.",
       },
       customizationText: {
         en: "We offer flexible customization options to meet different operational requirements, including dimension selection, material selection, and the application of various types of treatments, in addition to design modifications based on the intended use and machine capacity.",
@@ -84,9 +84,9 @@ export const useProductsStore = defineStore("products", () => {
       ],
       image: "/assets/images/products/Screws_Barrels/1.png",
       gallery: [
-        "/assets/images/products/Screws_Barrels/1.png",
-        "/assets/images/products/Screws_Barrels/2.png",
-        "/assets/images/products/Screws_Barrels/3.png",
+        "/assets/images/products//Screws_Barrels/1-1.jpg",
+        "/assets/images/products/Screws_Barrels/2.jpg",
+        "/assets/images/products/Screws_Barrels/3.jpg",
         "/assets/images/products/Screws_Barrels/4.jpg",
       ],
     },
@@ -102,7 +102,7 @@ export const useProductsStore = defineStore("products", () => {
       },
       fullDescription: {
         en: "Grenco provides high-reliability plastic shredding machines engineered for strong and consistent performance in recycling facilities and industrial workshops. With customizable sizes and capacities, the machines efficiently process various plastic materials while maintaining a stable and uniform shredded output. The reinforced construction ensures smooth operation under heavy workloads, while the intelligent safety system reduces downtime and enhances operator protection. Thanks to its maintenance-friendly design, the shredder offers a durable and cost-effective solution tailored for modern recycling operations.",
-        ar: "توفر جرينكو ماكينات تكسير بلاستيك عالية الموثوقية مصممة لأداء قوي ومتسق في منشآت إعادة التدوير والورش الصناعية. مع أحجام وقدرات قابلة للتخصيص، تعالج الماكينات مواد بلاستيكية مختلفة بكفاءة مع الحفاظ على مخرجات تكسير مستقرة وموحدة. يضمن البناء المقوى التشغيل السلس تحت أحمال العمل الثقيلة، بينما يقلل نظام الأمان الذكي من وقت التوقف ويعزز حماية المشغل. بفضل تصميمها الصديق للصيانة، توفر الكسارة حلاً متينًا وفعالاً من حيث التكلفة مصممًا لعمليات إعادة التدوير الحديثة.",
+        ar: "توفر جرينكوا ماكينات تكسير بلاستيك عالية الموثوقية مصممة لأداء قوي ومتسق في منشآت إعادة التدوير والورش الصناعية. مع أحجام وقدرات قابلة للتخصيص، تعالج الماكينات مواد بلاستيكية مختلفة بكفاءة مع الحفاظ على مخرجات تكسير مستقرة وموحدة. يضمن البناء المقوى التشغيل السلس تحت أحمال العمل الثقيلة، بينما يقلل نظام الأمان الذكي من وقت التوقف ويعزز حماية المشغل. بفضل تصميمها الصديق للصيانة، توفر الكسارة حلاً متينًا وفعالاً من حيث التكلفة مصممًا لعمليات إعادة التدوير الحديثة.",
       },
       customizationText: {
         en: "We offer a wide range of plastic shredders designed to handle various types of plastics, accommodating different shapes and sizes. Each machine can be customized according to the client’s specific requirements, including the number of blades, cutting dimensions, and overall design. This ensures optimal performance and efficiency for every type of plastic processing need.",
@@ -148,7 +148,7 @@ export const useProductsStore = defineStore("products", () => {
       ],
       image: "/assets/images/products/Plastic_Shredder/1.jpg",
       gallery: [
-        "/assets/images/products/Plastic_Shredder/1.jpg",
+        "/assets/images/products/Plastic_Shredder/1-1.jpg",
         "/assets/images/products/Plastic_Shredder/2.jpg",
         "/assets/images/products/Plastic_Shredder/3.jpg",
       ],
@@ -165,7 +165,7 @@ export const useProductsStore = defineStore("products", () => {
       },
       fullDescription: {
         en: "Grenco offers compact and flexible mini plastic recycling machines designed to support multiple recycling processes within a smart and efficient framework. The system enables operations such as shredding, thermal processing, and material preparation without requiring large production spaces or complex setups. Equipped with an IIoT-enabled monitoring platform, the machine provides real-time insights, productivity analytics, and maintenance alerts to ensure continuous and stable operation. This makes it an excellent solution for small facilities, R&D laboratories, and startups seeking an affordable and technologically advanced recycling system.",
-        ar: "تقدم جرينكو ماكينات إعادة تدوير بلاستيك صغيرة مدمجة ومرنة مصممة لدعم عمليات إعادة تدوير متعددة ضمن إطار ذكي وفعال. يتيح النظام عمليات مثل التكسير والمعالجة الحرارية وتجهيز المواد دون الحاجة لمساحات إنتاج كبيرة أو تجهيزات معقدة. مزودة بمنصة مراقبة تدعم تقنية إنترنت الأشياء الصناعية (IIoT)، توفر الماكينة رؤى في الوقت الفعلي وتحليلات للإنتاجية وتنبيهات للصيانة لضمان تشغيل مستمر ومستقر. هذا يجعلها حلاً ممتازًا للمنشآت الصغيرة ومختبرات البحث والتطوير والشركات الناشئة التي تبحث عن نظام إعادة تدوير متطور تقنيًا وبأسعار معقولة.",
+        ar: "تقدم جرينكوا ماكينات إعادة تدوير بلاستيك صغيرة مدمجة ومرنة مصممة لدعم عمليات إعادة تدوير متعددة ضمن إطار ذكي وفعال. يتيح النظام عمليات مثل التكسير والمعالجة الحرارية وتجهيز المواد دون الحاجة لمساحات إنتاج كبيرة أو تجهيزات معقدة. مزودة بمنصة مراقبة تدعم تقنية إنترنت الأشياء الصناعية (IIoT)، توفر الماكينة رؤى في الوقت الفعلي وتحليلات للإنتاجية وتنبيهات للصيانة لضمان تشغيل مستمر ومستقر. هذا يجعلها حلاً ممتازًا للمنشآت الصغيرة ومختبرات البحث والتطوير والشركات الناشئة التي تبحث عن نظام إعادة تدوير متطور تقنيًا وبأسعار معقولة.",
       },
       customizationText: {
         en: "We offer compact machines in custom sizes to suit each client’s needs, including Mini Shredder Machine, Mini Extruder Machine, Mini Granulator Machine, Mini Pelletizer Machine, and Mini Injection Machine, with options to accommodate various production capacities.",
@@ -206,7 +206,7 @@ export const useProductsStore = defineStore("products", () => {
       ],
       image: "/assets/images/products/Mini_Plastic/1.jpg",
       gallery: [
-        "/assets/images/products/Mini_Plastic/1.jpg",
+        "/assets/images/products/Mini_Plastic/1-1.jpg",
         "/assets/images/products/Mini_Plastic/2.jpg",
         "/videos/video_1.mp4",
       ],

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { useProductsStore } from "../stores/products";
@@ -51,6 +51,23 @@ const product = computed(() => {
 
 const activeMedia = ref("");
 
+// --- منطق الأنيميشن المتجاوب ---
+const windowWidth = ref(typeof window !== "undefined" ? window.innerWidth : 0);
+
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
+// تحديد نوع الأنيميشن بناءً على العرض
+// نستخدم 1024px لأنها نقطة تحول الشبكة (Grid) في الـ CSS
+const galleryAnimation = computed(() => {
+  return windowWidth.value >= 1024 ? "fade-right" : "fade-up";
+});
+
+const infoAnimation = computed(() => {
+  return windowWidth.value >= 1024 ? "fade-left" : "fade-up";
+});
+
 watch(
   rawProduct,
   (newVal) => {
@@ -67,9 +84,16 @@ watch(
 );
 
 onMounted(() => {
+  // إضافة مستمع تغيير الحجم
+  window.addEventListener("resize", updateWidth);
+
   if (rawProduct.value && rawProduct.value.gallery) {
     activeMedia.value = rawProduct.value.gallery[0];
   }
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateWidth);
 });
 
 const setActiveMedia = (media: string) => {
@@ -95,7 +119,11 @@ const requestQuote = () => {
 </script>
 
 <template>
-  <div v-if="product" class="product-details-page">
+  <div
+    v-if="product"
+    class="product-details-page"
+    :dir="locale === 'ar' ? 'rtl' : 'ltr'"
+  >
     <div class="page-header">
       <div class="container">
         <h1 class="page-title" data-aos="fade-up">{{ product.name }}</h1>
@@ -105,7 +133,7 @@ const requestQuote = () => {
     <section class="section product-details-section">
       <div class="container">
         <div class="product-details-grid">
-          <div class="product-gallery" data-aos="fade-right">
+          <div class="product-gallery" :data-aos="galleryAnimation">
             <div class="main-image">
               <video
                 v-if="isVideo(activeMedia)"
@@ -150,7 +178,7 @@ const requestQuote = () => {
             </div>
           </div>
 
-          <div class="product-info" data-aos="fade-left">
+          <div class="product-info" :data-aos="infoAnimation">
             <p class="product-description">
               {{ product.fullDescription || product.description }}
             </p>
@@ -164,7 +192,7 @@ const requestQuote = () => {
               </ul>
             </div>
 
-            <!-- <div class="product-specs">
+            <div class="product-specs">
               <h3>{{ t("products.specs") }}</h3>
               <div class="specs-grid">
                 <div
@@ -172,18 +200,6 @@ const requestQuote = () => {
                   :key="key"
                   class="spec-item"
                 >
-                  <div class="spec-label">
-                    {{ product.specs[key] }}
-                  </div>
-                  <div class="spec-value">{{ label }}</div>
-                </div>
-              </div>
-            </div> -->
-
-            <div class="product-specs">
-              <h3>{{ t("products.specs") }}</h3>
-              <div class="specs-grid">
-                <div v-for="label in product.specsLabels" class="spec-item">
                   <div class="spec-value">{{ label }}</div>
                 </div>
               </div>
@@ -262,6 +278,8 @@ const requestQuote = () => {
 .product-details-section {
   padding: var(--space-6) 0;
   background-color: var(--color-white);
+  /* منع خروج العناصر أثناء الأنيميشن */
+  overflow-x: hidden;
 }
 
 .product-details-grid {
@@ -292,7 +310,7 @@ const requestQuote = () => {
 .media-content {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   transition: transform var(--transition-slow) ease;
 }
 
@@ -385,6 +403,7 @@ img.media-content:hover {
   padding-bottom: var(--space-2);
 }
 
+/* تنسيق الخط أسفل العناوين (افتراضي LTR) */
 .product-features-full h3::after,
 .product-specs h3::after,
 .product-plastics-full h3::after,
@@ -473,6 +492,21 @@ img.media-content:hover {
   margin-top: var(--space-5);
 }
 
+.product-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.product-back-btn:hover i {
+  transform: translateX(4px);
+}
+
+/* =========================================
+   Responsive & Desktop Adjustments
+   ========================================= */
+
 @media (min-width: 640px) {
   .product-actions {
     flex-direction: row;
@@ -485,32 +519,50 @@ img.media-content:hover {
   }
 }
 
-:deep(.rtl) .product-features-full li i {
+/* تحسينات الموبايل */
+@media (max-width: 768px) {
+  .page-header {
+    padding: var(--space-6) 0 var(--space-4);
+    margin-top: 60px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .main-image {
+    /* تقليل ارتفاع الصورة في الموبايل */
+    height: 300px;
+  }
+
+  .product-details-section {
+    padding: var(--space-5) 0;
+  }
+
+  .specs-grid {
+    /* السماح للمواصفات بأخذ عرض كامل في الشاشات الصغيرة جداً */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+/* =========================================
+   RTL Adjustments (تعديلات اللغة العربية)
+   ========================================= */
+
+.product-details-page[dir="rtl"] .product-features-full li i {
   margin-right: 0;
   margin-left: var(--space-2);
 }
 
-:deep(.rtl) .product-features-full h3::after,
-:deep(.rtl) .product-specs h3::after,
-:deep(.rtl) .product-plastics-full h3::after,
-:deep(.rtl) .product-customization h3::after {
+.product-details-page[dir="rtl"] .product-features-full h3::after,
+.product-details-page[dir="rtl"] .product-specs h3::after,
+.product-details-page[dir="rtl"] .product-plastics-full h3::after,
+.product-details-page[dir="rtl"] .product-customization h3::after {
   left: auto;
   right: 0;
 }
-/* أضف هذا الجزء في الستايل */
-.product-actions .btn {
-  display: inline-flex; /* لضمان عمل الفليكس */
-  align-items: center; /* توسيط عمودي */
-  justify-content: center; /* توسيط أفقي */
-  gap: var(--space-2); /* المسافة المطلوبة بين الأيقونة والنص */
-}
 
-/* تحسين حركة السهم عند الوقوف عليه */
-.product-back-btn:hover i {
-  transform: translateX(4px);
-}
-
-:deep(.rtl) .product-back-btn:hover i {
-  transform: translateX(-4px); /* عكس الحركة في العربي */
+.product-details-page[dir="rtl"] .product-back-btn:hover i {
+  transform: translateX(-4px);
 }
 </style>

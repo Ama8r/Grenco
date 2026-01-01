@@ -4,17 +4,15 @@ import { useI18n } from "vue-i18n";
 
 const { t, locale } = useI18n();
 
-// البيانات مهندلة لتدعم اللغتين مباشرة
 const rawTestimonials = [
   {
     id: 1,
-    // صورة تعبيرية لمهندس
     image: "/assets/images/Testimonials/Man-Avatar.webp",
     ar: {
       name: "م. إبراهيم سيد",
       position: "مهندس ميكاترونيكس",
       company: "",
-      quote: " ما شاء الله شركه جرينكو شركه متميزه بالتوفيق ليها دايما يارب",
+      quote: " ما شاء الله شركه جرينكوا شركه متميزه بالتوفيق ليها دايما يارب",
     },
     en: {
       name: "Eng. Ibrahim Sayed",
@@ -26,14 +24,13 @@ const rawTestimonials = [
   },
   {
     id: 2,
-    // صورة تعبيرية لمدير
     image: "/assets/images/Testimonials/Man-Avatar.webp",
     ar: {
       name: "م. أحمد عبدالسلام",
       position: "مدير تشغيل",
       company: "مصنع بلاستيك",
       quote:
-        " بصراحة تعاملنا مع جرينكو كان مريح جدًا، الماكينة صغيرة الحجم وقوية في نفس الوقت، والإنتاجية أعلى من اللي كنا متوقعينه. فريق محترم ودعم فني ممتاز 👌",
+        " بصراحة تعاملنا مع جرينكوا كان مريح جدًا، الماكينة صغيرة الحجم وقوية في نفس الوقت، والإنتاجية أعلى من اللي كنا متوقعينه. فريق محترم ودعم فني ممتاز 👌",
     },
     en: {
       name: "Eng. Ahmed Abdelsalam",
@@ -45,14 +42,13 @@ const rawTestimonials = [
   },
   {
     id: 3,
-    // صورة تعبيرية لصاحب عمل
     image: "/assets/images/Testimonials/Man-Avatar.webp",
     ar: {
       name: "م. محمد فؤاد",
       position: "صاحب ورشة",
       company: "إعادة تدوير",
       quote:
-        " جربنا أكتر من ماكينة قبل كده، لكن جرينكو فرقت معانا في الجودة والتصميم الذكي وتوفير المساحة. اختيار موفق لأي حد عايز يبدأ أو يطوّر شغله 🔧♻️",
+        " جربنا أكتر من ماكينة قبل كده، لكن جرينكوا فرقت معانا في الجودة والتصميم الذكي وتوفير المساحة. اختيار موفق لأي حد عايز يبدأ أو يطوّر شغله 🔧♻️",
     },
     en: {
       name: "Eng. Mohamed Fouad",
@@ -64,7 +60,6 @@ const rawTestimonials = [
   },
 ];
 
-// Computed property لاختيار اللغة المناسبة
 const testimonials = computed(() => {
   return rawTestimonials.map((item) => ({
     id: item.id,
@@ -86,14 +81,13 @@ const prevTestimonial = () => {
     testimonials.value.length;
 };
 
-// === منطق التشغيل التلقائي ===
 let autoplayInterval: any = null;
 
 const startAutoplay = () => {
   if (autoplayInterval) return;
   autoplayInterval = setInterval(() => {
     nextTestimonial();
-  }, 5000); // 5 ثواني
+  }, 5000);
 };
 
 const stopAutoplay = () => {
@@ -135,7 +129,7 @@ onUnmounted(() => {
       >
         <button
           @click="prevTestimonial"
-          class="nav-btn prev-btn d-none d-md-flex"
+          class="nav-btn prev-btn hide-on-mobile"
         >
           <i
             class="pi"
@@ -154,7 +148,10 @@ onUnmounted(() => {
               :key="testimonial.id"
               class="testimonial-slide"
             >
-              <div class="testimonial-card">
+              <div
+                class="testimonial-card"
+                :dir="locale === 'ar' ? 'rtl' : 'ltr'"
+              >
                 <i class="pi pi-quote-right quote-watermark"></i>
 
                 <div class="content-body">
@@ -180,7 +177,7 @@ onUnmounted(() => {
 
         <button
           @click="nextTestimonial"
-          class="nav-btn next-btn d-none d-md-flex"
+          class="nav-btn next-btn hide-on-mobile"
         >
           <i
             class="pi"
@@ -220,6 +217,7 @@ onUnmounted(() => {
   color: var(--color-gray-600);
 }
 
+/* حاوية السلايدر الرئيسية */
 .testimonials-wrapper {
   position: relative;
   max-width: 1000px;
@@ -236,17 +234,23 @@ onUnmounted(() => {
   border-radius: var(--radius-xl);
   box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
   background: var(--color-white);
+  flex: 1;
+  /* إضافة مهمة: تمنع تمدد الفليكس خارج الحدود */
+  min-width: 0;
 }
 
 .testimonials-track {
   display: flex;
   width: 100%;
   transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform; /* تحسين الأداء */
 }
 
 .testimonial-slide {
   min-width: 100%;
+  width: 100%; /* تأكيد العرض */
   flex-shrink: 0;
+  box-sizing: border-box; /* يضمن احتساب البادينج داخل العرض */
 }
 
 /* Card Design */
@@ -259,9 +263,11 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   min-height: 320px;
+  width: 100%;
+  box-sizing: border-box; /* مهم جداً لمنع الخروج عن الحواف */
 }
 
-/* The Watermark Quote */
+/* Watermark Quote */
 .quote-watermark {
   position: absolute;
   top: 10%;
@@ -278,6 +284,7 @@ onUnmounted(() => {
   position: relative;
   z-index: 1;
   max-width: 800px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -288,6 +295,8 @@ onUnmounted(() => {
   font-style: italic;
   margin-bottom: var(--space-5);
   font-weight: 500;
+  word-wrap: break-word;
+  padding: 0 10px; /* هوامش جانبية بسيطة للنص */
 }
 
 /* Author Section */
@@ -340,6 +349,7 @@ onUnmounted(() => {
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
+  z-index: 2; /* التأكد من ظهور الأزرار فوق الكارد */
 }
 
 .nav-btn:hover {
@@ -373,19 +383,62 @@ onUnmounted(() => {
   background: var(--color-primary);
 }
 
-/* Mobile Tweaks */
+/* =========================================
+   Mobile Optimization (التعديلات الجذرية)
+   ========================================= */
 @media (max-width: 768px) {
-  .quote-text {
-    font-size: 1.1rem;
-  }
-  .quote-watermark {
-    font-size: 6rem;
-  }
-  .d-none {
+  .hide-on-mobile {
     display: none !important;
   }
-  .d-md-flex {
-    display: flex !important;
+
+  .testimonials-section {
+    padding: var(--space-5) 0; /* تقليل بادينج السكشن */
+  }
+
+  .testimonials-wrapper {
+    gap: 0;
+    padding: 0; /* إزالة البادينج الجانبي للحاوية */
+    width: 100%;
+  }
+
+  .slider-container {
+    border-radius: var(--radius-lg); /* تقليل نصف القطر قليلاً */
+    box-shadow: none; /* تخفيف الظل في الموبايل لزيادة المساحة البصرية */
+    background: transparent; /* دمج الخلفية */
+  }
+
+  /* تعديل الكارد في الموبايل */
+  .testimonial-card {
+    /* تقليل البادينج بشكل كبير جداً لمنع القص */
+    padding: var(--space-4) var(--space-3);
+    min-height: auto; /* السماح للكارد بالتقلص حسب المحتوى */
+  }
+
+  /* تصغير حجم خط الاقتباس */
+  .quote-text {
+    font-size: 1rem; /* تصغير الخط */
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+    padding: 0; /* إزالة أي بادينج جانبي للنص نفسه */
+  }
+
+  .quote-watermark {
+    font-size: 4rem; /* تصغير العلامة المائية */
+    top: 0;
+  }
+
+  /* تصغير صورة واسم العميل */
+  .author-img-wrapper {
+    width: 55px;
+    height: 55px;
+  }
+
+  .author-info .name {
+    font-size: 1rem;
+  }
+
+  .author-info .role {
+    font-size: 0.8rem;
   }
 }
 </style>

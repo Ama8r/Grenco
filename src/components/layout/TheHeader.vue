@@ -70,7 +70,7 @@ const navLinks = computed(() => [
   <header class="header" :class="{ 'header-scrolled': true }">
     <div class="container header-container">
       <router-link to="/" class="logo">
-        <img src="/assets/grencoLogo.png" alt="Grenco" width="140" />
+        <img src="/assets/grencoLogo.png" alt="Grenco" width="120" />
       </router-link>
 
       <div

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
+// 1. نحتاج لاستيراد locale لمعرفة اللغة الحالية
+const { t, locale } = useI18n();
 
 const currentYear = new Date().getFullYear();
 </script>
 
 <template>
-  <footer class="footer">
+  <footer class="footer" :dir="locale === 'ar' ? 'rtl' : 'ltr'">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
@@ -30,9 +31,6 @@ const currentYear = new Date().getFullYear();
             >
               <i class="pi pi-facebook"></i>
             </a>
-            <!-- <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <i class="pi pi-instagram"></i>
-            </a> -->
             <a
               href="https://wa.me/201152338718"
               target="_blank"
@@ -123,6 +121,7 @@ const currentYear = new Date().getFullYear();
 .footer-desc {
   margin-bottom: var(--space-3);
   opacity: 0.8;
+  line-height: 1.6;
 }
 
 .social-links {
@@ -148,6 +147,7 @@ const currentYear = new Date().getFullYear();
   transform: translateY(-3px);
 }
 
+/* Common Header Styles */
 .footer-links h4,
 .footer-contact h4 {
   font-size: var(--font-size-lg);
@@ -156,20 +156,23 @@ const currentYear = new Date().getFullYear();
   padding-bottom: var(--space-2);
 }
 
+/* 3. الخط الأخضر (الوضع الافتراضي LTR) */
 .footer-links h4::after,
 .footer-contact h4::after {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: 0; /* يبدأ من اليسار */
   width: 50px;
   height: 2px;
   background-color: var(--color-primary);
+  transition: all 0.3s ease;
 }
 
 .footer-links ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .footer-links li {
@@ -178,14 +181,16 @@ const currentYear = new Date().getFullYear();
 
 .footer-links a {
   color: var(--color-gray-300);
-  transition: color var(--transition-normal),
-    padding-left var(--transition-normal);
+  transition: all 0.3s ease;
   display: inline-block;
+  text-decoration: none;
 }
 
+/* Hover Effect (Default LTR) */
 .footer-links a:hover {
   color: var(--color-primary);
   padding-left: var(--space-2);
+  padding-right: 0;
 }
 
 .footer-contact address {
@@ -197,6 +202,11 @@ const currentYear = new Date().getFullYear();
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  color: var(--color-gray-300);
+}
+
+.footer-contact p i {
+  color: var(--color-primary);
 }
 
 .footer-bottom {
@@ -208,20 +218,21 @@ const currentYear = new Date().getFullYear();
   opacity: 0.7;
 }
 
-/* RTL adjustments */
-:deep(.rtl) .footer-links h4::after,
-:deep(.rtl) .footer-contact h4::after {
-  left: auto;
-  right: 0;
+/* =========================================
+   RTL Fixes (إصلاحات اللغة العربية)
+   ========================================= */
+
+/* 4. استهداف العنصر الذي يحمل dir="rtl" مباشرة */
+.footer[dir="rtl"] .footer-links h4::after,
+.footer[dir="rtl"] .footer-contact h4::after {
+  left: auto; /* يلغي خاصية اليسار */
+  right: 0; /* يجبر الخط على البدء من اليمين */
 }
 
-:deep(.rtl) .footer-links a:hover {
+/* إصلاح حركة الروابط في العربي */
+.footer[dir="rtl"] .footer-links a:hover {
   padding-left: 0;
-  padding-right: var(--space-2);
-}
-
-:deep(.rtl) .footer-contact p {
-  flex-direction: row-reverse;
+  padding-right: var(--space-2); /* يتحرك لليسار */
 }
 
 /* Responsive styles */

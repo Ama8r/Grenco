@@ -1,9 +1,37 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 const { t } = useI18n();
 const router = useRouter();
+
+// 1. تعريف متغير لعرض الشاشة
+const windowWidth = ref(typeof window !== "undefined" ? window.innerWidth : 0);
+
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
+// 2. تحديث العرض عند تغيير حجم النافذة
+onMounted(() => {
+  window.addEventListener("resize", updateWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateWidth);
+});
+
+// 3. تحديد نوع الأنيميشن للصورة بناءً على العرض
+// إذا كانت الشاشة أكبر من 1024 (كما في الميديا كويري) يكون من اليسار، وإلا يكون من الأسفل
+const imageAnimation = computed(() => {
+  return windowWidth.value >= 1024 ? "fade-left" : "fade-up";
+});
+
+// (اختياري) يفضل أيضاً تعديل أنيميشن النصوص ليكون من الأسفل في الموبايل لتوحيد التجربة
+const textAnimation = computed(() => {
+  return windowWidth.value >= 1024 ? "fade-right" : "fade-up";
+});
 
 const navigateToAbout = () => {
   router.push({ name: "about" });
@@ -14,7 +42,7 @@ const navigateToAbout = () => {
   <section class="section about-preview">
     <div class="container">
       <div class="about-grid">
-        <div class="about-content" data-aos="fade-right">
+        <div class="about-content" :data-aos="textAnimation">
           <h2 class="section-title">{{ t("about.title") }}</h2>
           <p class="about-intro">{{ t("about.intro") }}</p>
 
@@ -38,7 +66,7 @@ const navigateToAbout = () => {
           </button>
         </div>
 
-        <div class="about-image" data-aos="fade-left">
+        <div class="about-image" :data-aos="imageAnimation">
           <img
             src="/assets/For-Plastic-Solutions.png"
             alt="Grenco recycling machines"
@@ -136,30 +164,25 @@ const navigateToAbout = () => {
   }
 }
 
-/* ... باقي الستايلات الموجودة مسبقاً ... */
-
 /* تنسيق الزر الجديد */
 .view-all-btn {
-  display: inline-flex; /* يجعل العناصر داخل الزر مرنة */
-  align-items: center; /* توسيط عمودي للنص والأيقونة */
-  justify-content: center; /* توسيط أفقي */
-  gap: var(--space-2); /* مسافة آمنة بين النص والأيقونة لا تتأثر باللغة */
-  padding-left: var(--space-4); /* تحسين الحشوة الداخلية */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding-left: var(--space-4);
   padding-right: var(--space-4);
 }
 
-/* تحسين حركة السهم عند الوقوف على الزر */
 .view-all-btn:hover i {
-  transform: translateX(4px); /* تحريك السهم لليمين قليلاً */
+  transform: translateX(4px);
 }
 
-/* تنسيقات خاصة باللغة العربية (RTL) */
 :deep(.rtl) .view-all-btn i {
-  transform: scaleX(-1); /* قلب السهم ليشير لليسار في العربي */
+  transform: scaleX(-1);
 }
 
-/* عكس حركة السهم في العربي عند الوقوف عليه */
 :deep(.rtl) .view-all-btn:hover i {
-  transform: scaleX(-1) translateX(4px); /* الحفاظ على القلب مع الحركة */
+  transform: scaleX(-1) translateX(4px);
 }
 </style>

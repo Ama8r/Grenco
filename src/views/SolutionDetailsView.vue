@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useSolutionsStore } from "../stores/solutions";
@@ -21,16 +21,44 @@ const getBackgroundImage = (imageUrl: string) => {
   return `url('${cleanPath}')`;
 };
 
-// إعادة التوجيه إذا لم يتم العثور على الحل
+// --- منطق الأنيميشن المتجاوب (Responsive Animation) ---
+const windowWidth = ref(typeof window !== "undefined" ? window.innerWidth : 0);
+
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
+// تحديد نوع الأنيميشن بناءً على العرض
+// نستخدم 992px لأنها نقطة التحول في الـ CSS الخاص بك (عندما تتحول الشبكة لعمود واحد)
+const mainInfoAnimation = computed(() => {
+  return windowWidth.value >= 992 ? "fade-right" : "fade-up";
+});
+
+const cardAnimation = computed(() => {
+  return windowWidth.value >= 992 ? "fade-left" : "fade-up";
+});
+
 onMounted(() => {
+  // إضافة مستمع لتغيير حجم الشاشة
+  window.addEventListener("resize", updateWidth);
+
+  // إعادة التوجيه إذا لم يتم العثور على الحل
   if (!solution.value && !isNaN(Number(route.params.id))) {
     router.push({ name: "solutions" });
   }
 });
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateWidth);
+});
 </script>
 
 <template>
-  <div v-if="solution" class="solution-details-page">
+  <div
+    v-if="solution"
+    class="solution-details-page"
+    :dir="locale === 'ar' ? 'rtl' : 'ltr'"
+  >
     <div class="solution-hero">
       <div
         class="hero-bg"
@@ -59,14 +87,14 @@ onMounted(() => {
     <section class="section content-section">
       <div class="container">
         <div class="content-grid">
-          <div class="main-info" data-aos="fade-right">
+          <div class="main-info" :data-aos="mainInfoAnimation">
             <h2>{{ t("solutionDetails.overview") }}</h2>
             <p class="description-text">
               {{ t(`solutions.${solution.translationKey}.content`) }}
             </p>
           </div>
 
-          <div class="benefits-card-wrapper" data-aos="fade-left">
+          <div class="benefits-card-wrapper" :data-aos="cardAnimation">
             <div class="benefits-card">
               <h3>{{ t("solutionDetails.keyAdvantages") }}</h3>
               <ul class="benefits-list">
@@ -138,6 +166,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .hero-icon {
@@ -160,6 +189,7 @@ onMounted(() => {
   margin-bottom: var(--space-3);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   max-width: 800px;
+  padding: 0 var(--space-3);
 }
 
 .hero-breadcrumb {
@@ -168,6 +198,8 @@ onMounted(() => {
   gap: var(--space-2);
   font-size: var(--font-size-sm);
   opacity: 0.9;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hero-breadcrumb a {
@@ -199,7 +231,7 @@ onMounted(() => {
 
 @media (min-width: 992px) {
   .content-grid {
-    grid-template-columns: 1.6fr 1fr; /* مساحة أكبر للنص الطويل */
+    grid-template-columns: 1.6fr 1fr;
     align-items: start;
   }
 }
@@ -228,7 +260,7 @@ onMounted(() => {
   line-height: 1.9;
   color: var(--color-gray-700);
   margin-bottom: var(--space-5);
-  white-space: pre-line; /* هام جداً للحفاظ على تنسيق الفقرات */
+  white-space: pre-line;
 }
 
 /* Benefits Card */
@@ -298,18 +330,81 @@ onMounted(() => {
   margin-top: var(--space-4);
 }
 
-/* RTL Support */
-:deep(.rtl) .main-info h2::after {
+/* =========================================
+   RTL Fixes (إصلاحات اللغة العربية)
+   ========================================= */
+.solution-details-page[dir="rtl"] .main-info h2::after {
   left: auto;
   right: 0;
 }
 
-:deep(.rtl) .check-icon {
+.solution-details-page[dir="rtl"] .check-icon {
   margin-right: 0;
   margin-left: var(--space-3);
 }
 
-:deep(.rtl) .hero-breadcrumb i {
+.solution-details-page[dir="rtl"] .hero-breadcrumb i {
   transform: rotate(180deg);
+}
+
+/* =========================================
+   Responsive Styles (تحسينات الموبايل)
+   ========================================= */
+
+/* Tablets & Mobile (Max width 991px) */
+@media (max-width: 991px) {
+  /* إلغاء الـ sticky في الموبايل لأن العناصر ستكون فوق بعضها */
+  .benefits-card {
+    position: static;
+    margin-top: var(--space-4);
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+}
+
+/* Mobile (Max width 768px) */
+@media (max-width: 768px) {
+  .solution-hero {
+    margin-top: 60px;
+    height: auto;
+    min-height: 300px;
+    padding: var(--space-6) 0;
+  }
+
+  .content-section {
+    padding: var(--space-5) 0;
+  }
+
+  .main-info h2 {
+    font-size: 1.75rem;
+  }
+
+  .description-text {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .benefits-card {
+    padding: var(--space-4);
+  }
+
+  .benefits-card h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Small Mobile (Max width 480px) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
 }
 </style>
